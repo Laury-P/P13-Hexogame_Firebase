@@ -46,7 +46,9 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
-firebase-ui-auth = { group = "com.firebaseui", name = "auth", version.ref = "firebaseUiAuth" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+
+firebase-ui-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebaseUiAuth" }
 
 
 [plugins]
