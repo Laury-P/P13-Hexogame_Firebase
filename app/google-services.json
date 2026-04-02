@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "629568872135",
+    "project_id": "p13-hexogame",
+    "storage_bucket": "p13-hexogame.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629568872135:android:39fde192739818c7e9e8e2",
+        "android_client_info": {
+          "package_name": "com.openclassrooms.hexagonal.games"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGghAB8XWmXvH4ucmmtfGpPxC_m0k_90Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
