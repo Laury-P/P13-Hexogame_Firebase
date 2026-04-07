@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -42,6 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.util.DebugLogger
+import com.firebase.ui.auth.AuthState
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
@@ -55,8 +57,12 @@ fun HomefeedScreen(
   onPostClick: (Post) -> Unit = {},
   onSettingsClick: () -> Unit = {},
   onFABClick: () -> Unit = {},
+  onNavigateToLogin: () -> Unit = {},
+  onNavigateToAccountManagement: () -> Unit = {},
 ) {
   var showMenu by rememberSaveable { mutableStateOf(false) }
+  val logState by viewModel.authState.collectAsStateWithLifecycle()
+  val context = LocalContext.current
   
   Scaffold(
     modifier = modifier,
@@ -83,6 +89,20 @@ fun HomefeedScreen(
               text = {
                 Text(
                   text = stringResource(id = R.string.action_settings)
+                )
+              }
+            )
+            DropdownMenuItem(
+              onClick = {
+                if (logState is AuthState.Success) {
+                  onNavigateToAccountManagement()
+                } else onNavigateToLogin()
+
+                // TODO MON COMPTE : AUTHENT OU GESTION
+              },
+              text = {
+                Text(
+                  text = stringResource(id = R.string.account)
                 )
               }
             )

@@ -1,7 +1,9 @@
 package com.openclassrooms.hexagonal.games.di
 
+import com.openclassrooms.hexagonal.games.data.repository.FirebaseUiAuthRepository
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFakeApi
+import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,4 +30,11 @@ class AppModule {
   fun providePostApi(): PostApi {
     return PostFakeApi()
   }
+
+  @Provides
+  @Singleton
+  fun provideAuthRepository(): AuthRepository {
+    return FirebaseUiAuthRepository()
+  }
+
 }

@@ -52,6 +52,12 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         },
         onFABClick = {
           navHostController.navigate(Screen.AddPost.route)
+        },
+        onNavigateToLogin = {
+          //TODO
+        },
+        onNavigateToAccountManagement = {
+          //TODO
         }
       )
     }
