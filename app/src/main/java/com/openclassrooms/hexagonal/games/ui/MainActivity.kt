@@ -9,6 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.openclassrooms.hexagonal.games.screen.Screen
+import com.openclassrooms.hexagonal.games.screen.account.AccountScreen
+import com.openclassrooms.hexagonal.games.screen.account.LogScreen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
@@ -54,10 +56,10 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
           navHostController.navigate(Screen.AddPost.route)
         },
         onNavigateToLogin = {
-          //TODO
+          navHostController.navigate(Screen.Login.route)
         },
         onNavigateToAccountManagement = {
-          //TODO
+          navHostController.navigate(Screen.Account.route)
         }
       )
     }
@@ -71,6 +73,15 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       SettingsScreen(
         onBackClick = { navHostController.navigateUp() }
       )
+    }
+    composable(route = Screen.Login.route) {
+      LogScreen(
+        onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) }
+      )
+    }
+
+    composable(route = Screen.Account.route) {
+      AccountScreen(onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) })
     }
   }
 }

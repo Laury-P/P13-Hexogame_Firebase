@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -62,7 +61,6 @@ fun HomefeedScreen(
 ) {
   var showMenu by rememberSaveable { mutableStateOf(false) }
   val logState by viewModel.authState.collectAsStateWithLifecycle()
-  val context = LocalContext.current
   
   Scaffold(
     modifier = modifier,
@@ -94,7 +92,7 @@ fun HomefeedScreen(
             )
             DropdownMenuItem(
               onClick = {
-                if (logState is AuthState.Success) {
+                if (logState is AuthState.Success || logState is AuthState.RequiresEmailVerification) {
                   onNavigateToAccountManagement()
                 } else onNavigateToLogin()
 

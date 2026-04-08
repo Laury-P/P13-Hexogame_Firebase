@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomefeedViewModel @Inject constructor(
   private val postRepository: PostRepository,
-  private val getUserLogStateUseCase: GetUserLogStateUseCase) :
+  getUserLogStateUseCase: GetUserLogStateUseCase) :
   ViewModel() {
   
   private val _posts: MutableStateFlow<List<Post>> = MutableStateFlow(emptyList())
