@@ -81,7 +81,10 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     }
 
     composable(route = Screen.Account.route) {
-      AccountScreen(onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) })
+      AccountScreen(
+        onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) },
+        onAuthenticationNeeded = { navHostController.navigate(Screen.Login.route)}
+      )
     }
   }
 }

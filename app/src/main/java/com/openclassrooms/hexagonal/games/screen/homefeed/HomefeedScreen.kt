@@ -95,8 +95,6 @@ fun HomefeedScreen(
                 if (logState is AuthState.Success || logState is AuthState.RequiresEmailVerification) {
                   onNavigateToAccountManagement()
                 } else onNavigateToLogin()
-
-                // TODO MON COMPTE : AUTHENT OU GESTION
               },
               text = {
                 Text(

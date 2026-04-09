@@ -10,6 +10,6 @@ interface AuthRepository {
     fun userLogState(): Flow<AuthState>
     suspend fun getCurrentUser(): User?
     suspend fun signOut(context: Context)
-    suspend fun deleteAccount()
+    suspend fun deleteAccount(context: Context)
 }
 

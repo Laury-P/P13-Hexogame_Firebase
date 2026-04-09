@@ -18,6 +18,7 @@ import com.firebase.ui.auth.ui.screens.FirebaseAuthScreen
 
 @Composable
 fun LogScreen(onHomeFeedNav: () -> Unit) {
+    //TODO Adapté les écrans au cahier des charges
     val context = LocalContext.current
     val configuration = authUIConfiguration {
         this.context = context
