@@ -16,6 +16,9 @@ android {
     targetSdk = 36
     versionCode = 1
     versionName = "1.0"
+    androidResources {
+      localeFilters += listOf("eng", "fr")
+    }
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -59,6 +62,8 @@ dependencies {
   //firebase
   implementation(platform(libs.firebase.bom))
   implementation(libs.firebase.analytics)
+  implementation(libs.firebase.auth)
+
   implementation(libs.firebase.ui.auth)
 
   implementation(libs.activity.compose)

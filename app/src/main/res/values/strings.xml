@@ -14,4 +14,8 @@
   <string name="contentDescription_more">More</string>
   <string name="contentDescription_notification_icon">Icone de notification</string>
   <string name="error_title">Title not valid</string>
+  <string name="account">My account</string>
+  <string name="signOutButton">Sign out</string>
+  <string name="deleteAccountButton">Delete Account</string>
+
 </resources>
