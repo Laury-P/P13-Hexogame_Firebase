@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     fun userLogState(): Flow<LocalAuthState>
     suspend fun getCurrentUser(): User?
-    suspend fun signOut(context: Context)
-    suspend fun deleteAccount(context: Context)
+    suspend fun signOut()
+    suspend fun deleteAccount()
 }
 

@@ -90,7 +90,7 @@ fun AccountScreen(
 
             Button(
                 onClick = {
-                    viewModel.deleteAccount(context)
+                    viewModel.deleteAccount()
                 },
                 modifier = Modifier.padding(12.dp).fillMaxWidth()
             ) {

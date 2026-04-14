@@ -1,15 +1,20 @@
 package com.openclassrooms.hexagonal.games.data.repository
 
 import android.content.Context
+import com.firebase.ui.auth.AuthException
 import com.firebase.ui.auth.AuthState
 import com.firebase.ui.auth.FirebaseAuthUI
+import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.model.User
 import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 
-class FirebaseUiAuthRepository : AuthRepository {
+class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext private val context: Context) : AuthRepository {
 
     override fun userLogState(): Flow<LocalAuthState> {
         return FirebaseAuthUI.getInstance()
@@ -36,8 +41,15 @@ class FirebaseUiAuthRepository : AuthRepository {
         return FirebaseAuthUI.getInstance().signOut(context)
     }
 
-    override suspend fun deleteAccount(context: Context) {
-        return FirebaseAuthUI.getInstance().delete(context)
-    }
+    override suspend fun deleteAccount() {
+        try {
+            FirebaseAuthUI.getInstance().delete(context)
+        } catch (e: Exception) {
+            throw when(e) {
+                is AuthException.InvalidCredentialsException -> DomainAuthException.NeedsReauth()
+                is AuthException.NetworkException -> DomainAuthException.NetworkError()
+                else -> DomainAuthException.UnknownError(e.message ?: "Unknown error")
+            }
+    }}
 
 }
