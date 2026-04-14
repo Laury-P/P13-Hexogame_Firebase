@@ -5,8 +5,8 @@ import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class DeleteAccountUseCase @Inject constructor(private val authRepository: AuthRepository) {
-    suspend operator fun invoke(context: Context){
+    suspend operator fun invoke(){
         //TODO Supprimer les données utilisateur avant de supprimé le compte
-        authRepository.deleteAccount(context)
+        authRepository.deleteAccount()
     }
 }

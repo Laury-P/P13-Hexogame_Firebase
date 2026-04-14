@@ -2,8 +2,8 @@ package com.openclassrooms.hexagonal.games.screen.homefeed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firebase.ui.auth.AuthState
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
+import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.usecases.GetUserLogStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +43,6 @@ class HomefeedViewModel @Inject constructor(
     }
   }
 
-  val authState : StateFlow<AuthState> = getUserLogStateUseCase()
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), AuthState.Idle)
-
+  val authState : StateFlow<LocalAuthState> = getUserLogStateUseCase()
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), LocalAuthState.LoggedOut)
 }

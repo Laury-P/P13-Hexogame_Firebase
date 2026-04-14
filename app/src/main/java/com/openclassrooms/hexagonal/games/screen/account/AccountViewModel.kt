@@ -1,9 +1,8 @@
 package com.openclassrooms.hexagonal.games.screen.account
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firebase.ui.auth.AuthException
+import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.usecases.DeleteAccountUseCase
 import com.openclassrooms.hexagonal.games.domain.usecases.LogoutUseCase
 import com.openclassrooms.hexagonal.games.ui.event.AccountEvent
@@ -24,31 +23,36 @@ class AccountViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
 
-    fun logout(context: Context) {
+    fun logout() {
         viewModelScope.launch {
-            logoutUseCase(context)
+            try {
+                logoutUseCase()
+            } catch (e: Exception) {
+                // !! because default message defined in repository
+                _events.send(AccountEvent.FailedSignOut(e.message!!))
+            }
         }
     }
 
-    fun deleteAccount(context: Context) {
+    fun deleteAccount() {
         viewModelScope.launch {
             try {
-                deleteAccountUseCase(context)
+                deleteAccountUseCase()
                _events.send(AccountEvent.AccountDeleted)
             } catch (e: Exception) {
                 when (e) {
-                    is AuthException.InvalidCredentialsException -> {
+                    is DomainAuthException.NeedsReauth -> {
                         _events.send(AccountEvent.NeedReauthentification)
                     }
-                    is AuthException.NetworkException -> {
+                    is DomainAuthException.NetworkError -> {
                         _events.send(AccountEvent.NetworkError)
                     }
                     else -> {
-                        _events.send(AccountEvent.UnknownError(e.message ?: "Unknown error"))
+                        // !! because default message defined in repository
+                        _events.send(AccountEvent.UnknownError(e.message!!))
                     }
                 }
             }
-
         }
     }
 }

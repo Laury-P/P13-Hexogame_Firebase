@@ -5,5 +5,6 @@ sealed class AccountEvent {
     object NetworkError : AccountEvent()
     data class UnknownError (val message: String) : AccountEvent()
     object AccountDeleted : AccountEvent()
+    data class FailedSignOut (val message: String) : AccountEvent()
 }
 

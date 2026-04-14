@@ -42,8 +42,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.util.DebugLogger
-import com.firebase.ui.auth.AuthState
 import com.openclassrooms.hexagonal.games.R
+import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
@@ -92,7 +92,7 @@ fun HomefeedScreen(
             )
             DropdownMenuItem(
               onClick = {
-                if (logState is AuthState.Success || logState is AuthState.RequiresEmailVerification) {
+                if (logState is LocalAuthState.LoggedIn) {
                   onNavigateToAccountManagement()
                 } else onNavigateToLogin()
               },
