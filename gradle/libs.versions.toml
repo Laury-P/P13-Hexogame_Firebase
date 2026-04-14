@@ -50,10 +50,11 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 
-firebase-ui-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebaseUiAuth" }
 firebase-ui-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebaseUi" }
 firebase-ui-storage = { group = "com.firebaseui", name = "firebase-ui-storage" , version.ref = "firebaseUi" }
+firebase-ui-firestore = { group = "com.firebaseui", name = "firebase-ui-firestore" , version.ref = "firebaseUi"}
 
 
 
