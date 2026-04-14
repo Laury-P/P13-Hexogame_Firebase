@@ -17,7 +17,7 @@ ksp = "2.3.4"
 lifecycleRuntimeCompose = "2.10.0"
 firebaseBom = "34.11.0"
 googleServices = "4.4.4"
-firebaseUiAuth = "10.0.0-beta02"
+firebaseUi = "10.0.0-beta02"
 
 
 
@@ -49,8 +49,12 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 
 firebase-ui-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebaseUiAuth" }
+firebase-ui-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebaseUi" }
+firebase-ui-storage = { group = "com.firebaseui", name = "firebase-ui-storage" , version.ref = "firebaseUi" }
+
 
 
 
