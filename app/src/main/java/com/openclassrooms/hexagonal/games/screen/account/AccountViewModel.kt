@@ -23,9 +23,14 @@ class AccountViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
 
-    fun logout(context: Context) {
+    fun logout() {
         viewModelScope.launch {
-            logoutUseCase(context)
+            try {
+                logoutUseCase()
+            } catch (e: Exception) {
+                // !! because default message defined in repository
+                _events.send(AccountEvent.FailedSignOut(e.message!!))
+            }
         }
     }
 

@@ -41,7 +41,6 @@ fun AccountScreen(
                 is AccountEvent.NeedReauthentification -> {
                     onAuthenticationNeeded()
                 }
-
                 is AccountEvent.NetworkError -> {
                     Toast.makeText(
                         context,
@@ -49,14 +48,15 @@ fun AccountScreen(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
                 is AccountEvent.UnknownError -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
-
                 is AccountEvent.AccountDeleted -> {
                     Toast.makeText(context, "Account deleted", Toast.LENGTH_SHORT).show()
                     onHomeFeedNav()
+                }
+                is AccountEvent.FailedSignOut -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -80,7 +80,7 @@ fun AccountScreen(
         Column(Modifier.padding(innerPadding)) {
             Button(
                 onClick = {
-                    viewModel.logout(context)
+                    viewModel.logout()
                     onHomeFeedNav()
                 },
                 modifier = Modifier.padding(12.dp).fillMaxWidth()
