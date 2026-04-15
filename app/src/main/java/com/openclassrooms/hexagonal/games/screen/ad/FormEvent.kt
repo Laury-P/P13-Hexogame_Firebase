@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import com.openclassrooms.hexagonal.games.R
 
@@ -21,7 +22,13 @@ sealed class FormEvent {
    * @property description The new description of the form.
    */
   data class DescriptionChanged(val description: String) : FormEvent()
-  
+
+  /**
+   * Event triggered when a photo is selected from the gallery.
+   *
+   * @property uri The URI of the selected photo.
+   */
+  data class PhotoSelected(val uri: Uri) : FormEvent()
 }
 
 /**

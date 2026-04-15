@@ -19,5 +19,7 @@
   <string name="deleteAccountButton">Suppression du compte</string>
 
   <string name="loggedin_to_post">Un compte est nécessaire pour ajouter une publication</string>
+  <string name="photo_button">Sélectionner une photo</string>
+  <string name="photo_description">Photo sélectionné</string>
 
 </resources>

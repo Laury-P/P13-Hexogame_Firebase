@@ -71,6 +71,12 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
           title = formEvent.title
         )
       }
+
+      is FormEvent.PhotoSelected -> {
+        _post.value = _post.value.copy(
+          photoUrl = formEvent.uri.toString()
+        )
+      }
     }
   }
   
