@@ -18,4 +18,6 @@
   <string name="signOutButton">Sign out</string>
   <string name="deleteAccountButton">Delete Account</string>
 
+  <string name="loggedin_to_post">An account is mandatory in order to add a post</string>
+
 </resources>
