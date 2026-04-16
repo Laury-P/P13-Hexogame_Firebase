@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games.screen.account
+package com.openclassrooms.hexagonal.games.ui.screen.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

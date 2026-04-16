@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games.screen.ad
+package com.openclassrooms.hexagonal.games.ui.screen.ad
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest

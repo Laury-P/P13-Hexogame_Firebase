@@ -12,12 +12,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.openclassrooms.hexagonal.games.screen.Screen
-import com.openclassrooms.hexagonal.games.screen.account.AccountScreen
-import com.openclassrooms.hexagonal.games.screen.account.LogScreen
-import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
-import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
-import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
+import com.openclassrooms.hexagonal.games.ui.screen.Screen
+import com.openclassrooms.hexagonal.games.ui.screen.account.AccountScreen
+import com.openclassrooms.hexagonal.games.ui.screen.account.LogScreen
+import com.openclassrooms.hexagonal.games.ui.screen.ad.AddScreen
+import com.openclassrooms.hexagonal.games.ui.screen.homefeed.HomefeedScreen
+import com.openclassrooms.hexagonal.games.ui.screen.settings.SettingsScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 import dagger.hilt.android.AndroidEntryPoint
 

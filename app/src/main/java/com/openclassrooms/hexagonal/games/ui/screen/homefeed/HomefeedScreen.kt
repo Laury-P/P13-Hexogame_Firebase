@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games.screen.homefeed
+package com.openclassrooms.hexagonal.games.ui.screen.homefeed
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

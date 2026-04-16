@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games.screen.ad
+package com.openclassrooms.hexagonal.games.ui.screen.ad
 
 import android.net.Uri
 import androidx.annotation.StringRes
