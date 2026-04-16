@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
+import com.openclassrooms.hexagonal.games.domain.usecases.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -19,7 +21,7 @@ import javax.inject.Inject
  * It utilizes dependency injection to retrieve a PostRepository instance for interacting with post data.
  */
 @HiltViewModel
-class AddViewModel @Inject constructor(private val postRepository: PostRepository) : ViewModel() {
+class AddViewModel @Inject constructor(private val postRepository: PostRepository, private val getUserUseCase: GetUserUseCase) : ViewModel() {
   
   /**
    * Internal mutable state flow representing the current post being edited.
@@ -83,15 +85,26 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
   /**
    * Attempts to add the current post to the repository after setting the author.
    *
-   * TODO: Implement logic to retrieve the current user.
    */
   fun addPost() {
-    //TODO : retrieve the current user
-    postRepository.addPost(
-      _post.value.copy(
-        author = User("1", "Gerry", "Ariella")
-      )
-    )
+    viewModelScope.launch {
+      try {
+        val user = getUserUseCase()
+
+        if (user != null) {
+          postRepository.addPost(
+            _post.value.copy(
+              author = user
+            )
+          )
+        } else {
+          // TODO : Handle the case where user is null
+        }
+      } catch (e: Exception){
+        //TODO: Handle the exception when id est null exception needReauth
+      }
+
+    }
   }
   
   /**

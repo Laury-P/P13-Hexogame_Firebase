@@ -16,7 +16,7 @@ class LogViewModel @Inject constructor(private val userRepository: UserRepositor
     private val _userExists = MutableStateFlow<Boolean?>(null)
     val userExists = _userExists.asStateFlow()
 
-    fun checkUser(uid : String) {
+    fun checkUser(uid: String) {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser(uid)
             _userExists.value = user != null
