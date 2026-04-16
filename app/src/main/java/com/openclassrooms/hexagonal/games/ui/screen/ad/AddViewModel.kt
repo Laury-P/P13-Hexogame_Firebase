@@ -1,15 +1,16 @@
 package com.openclassrooms.hexagonal.games.ui.screen.ad
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
-import com.openclassrooms.hexagonal.games.domain.model.User
+import com.openclassrooms.hexagonal.games.domain.repository.PostRepository
 import com.openclassrooms.hexagonal.games.domain.usecases.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,7 +23,10 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AddViewModel @Inject constructor(private val postRepository: PostRepository, private val getUserUseCase: GetUserUseCase) : ViewModel() {
-  
+
+  private val _isPublishing = MutableStateFlow<IsPublishing>(IsPublishing.Idle)
+  val isPublishing = _isPublishing.asStateFlow()
+
   /**
    * Internal mutable state flow representing the current post being edited.
    */
@@ -89,6 +93,7 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
   fun addPost() {
     viewModelScope.launch {
       try {
+        _isPublishing.value = IsPublishing.Publishing
         val user = getUserUseCase()
 
         if (user != null) {
@@ -97,11 +102,16 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
               author = user
             )
           )
+          _isPublishing.value = IsPublishing.Published
         } else {
           // TODO : Handle the case where user is null
+          Log.d("DEBUG_POST", "user is null")
+          _isPublishing.value = IsPublishing.Idle
         }
       } catch (e: Exception){
+        _isPublishing.value = IsPublishing.Idle
         //TODO: Handle the exception when id est null exception needReauth
+        Log.d("DEBUG_POST_viewmodel", e.message ?: "Unknown error")
       }
 
     }
@@ -125,4 +135,10 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
     }
   }
   
+}
+
+sealed class IsPublishing {
+  object Idle : IsPublishing()
+  object Publishing : IsPublishing()
+  object Published : IsPublishing()
 }

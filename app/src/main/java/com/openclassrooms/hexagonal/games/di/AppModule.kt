@@ -2,11 +2,14 @@ package com.openclassrooms.hexagonal.games.di
 
 import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.openclassrooms.hexagonal.games.data.repository.FirebasePostRepository
 import com.openclassrooms.hexagonal.games.data.repository.FirebaseUiAuthRepository
 import com.openclassrooms.hexagonal.games.data.repository.FirebaseUserRepository
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFakeApi
 import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
+import com.openclassrooms.hexagonal.games.domain.repository.PostRepository
 import com.openclassrooms.hexagonal.games.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -52,7 +55,20 @@ class AppModule {
 
   @Provides
   @Singleton
+  fun provideStorage() : FirebaseStorage {
+    return FirebaseStorage.getInstance()
+  }
+
+
+  @Provides
+  @Singleton
   fun provideUserRepository(firestore: FirebaseFirestore) : UserRepository {
     return FirebaseUserRepository(firestore)
+  }
+
+  @Provides
+  @Singleton
+  fun providePostRepository(firestore: FirebaseFirestore, storage: FirebaseStorage) : PostRepository {
+    return FirebasePostRepository(firestore, storage)
   }
 }

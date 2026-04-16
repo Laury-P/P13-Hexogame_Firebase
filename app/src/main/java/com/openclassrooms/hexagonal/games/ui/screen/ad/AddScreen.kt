@@ -3,6 +3,7 @@ package com.openclassrooms.hexagonal.games.ui.screen.ad
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,6 +77,13 @@ fun AddScreen(
     ) { contentPadding ->
         val post by viewModel.post.collectAsStateWithLifecycle()
         val error by viewModel.error.collectAsStateWithLifecycle()
+        val isPublishing by viewModel.isPublishing.collectAsStateWithLifecycle()
+
+        LaunchedEffect(isPublishing) {
+            if (isPublishing is IsPublishing.Published) {
+                onSaveClick()
+            }
+        }
 
         CreatePost(
             modifier = Modifier.padding(contentPadding),
@@ -84,7 +94,6 @@ fun AddScreen(
             onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
             onSaveClicked = {
                 viewModel.addPost()
-                onSaveClick()
             },
             onSelectPhotoClick = {
                 pickMedia.launch(
@@ -94,7 +103,18 @@ fun AddScreen(
                 )
             },
             photoUri = post.photoUrl,
+            loading = isPublishing is IsPublishing.Publishing
         )
+
+        if (isPublishing is IsPublishing.Publishing) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
     }
 }
 
@@ -108,7 +128,8 @@ private fun CreatePost(
     onSaveClicked: () -> Unit,
     onSelectPhotoClick: () -> Unit,
     photoUri: String?,
-    error: FormError?
+    error: FormError?,
+    loading: Boolean = false
 ) {
     val scrollState = rememberScrollState()
 
@@ -150,7 +171,7 @@ private fun CreatePost(
                 label = { Text(stringResource(id = R.string.hint_description)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
-            if(photoUri != null) {
+            if (photoUri != null) {
                 AsyncImage(
                     model = photoUri,
                     contentDescription = "Selected Photo",
@@ -163,7 +184,8 @@ private fun CreatePost(
             }
             Button(
                 onClick = { onSelectPhotoClick() },
-                modifier = Modifier.padding(top = 16.dp)) {
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
                 Text(text = stringResource(id = R.string.photo_button))
             }
 
@@ -171,12 +193,12 @@ private fun CreatePost(
                 Text(
                     text = stringResource(id = error.messageRes),
                     color = MaterialTheme.colorScheme.error,
-                    )
+                )
             }
 
         }
         Button(
-            enabled = error == null,
+            enabled = error == null && !loading,
             onClick = { onSaveClicked() }
         ) {
             Text(
@@ -184,6 +206,7 @@ private fun CreatePost(
                 text = stringResource(id = R.string.action_save)
             )
         }
+
     }
 }
 
