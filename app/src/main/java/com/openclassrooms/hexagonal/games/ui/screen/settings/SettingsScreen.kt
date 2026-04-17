@@ -1,5 +1,6 @@
-package com.openclassrooms.hexagonal.games.screen.settings
+package com.openclassrooms.hexagonal.games.ui.screen.settings
 
+import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -77,7 +78,7 @@ private fun Settings(
 ) {
   val notificationsPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     rememberPermissionState(
-      android.Manifest.permission.POST_NOTIFICATIONS
+      Manifest.permission.POST_NOTIFICATIONS
     )
   } else {
     null

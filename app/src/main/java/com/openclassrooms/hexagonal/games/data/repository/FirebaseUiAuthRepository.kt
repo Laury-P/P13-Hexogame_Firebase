@@ -6,7 +6,6 @@ import com.firebase.ui.auth.AuthState
 import com.firebase.ui.auth.FirebaseAuthUI
 import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
-import com.openclassrooms.hexagonal.games.domain.model.User
 import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -33,16 +32,16 @@ class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext pri
             }
     }
 
-    override suspend fun getCurrentUser(): User? {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun signOut() {
         try {
             FirebaseAuthUI.getInstance().signOut(context)
         } catch (e: Exception) {
             throw DomainAuthException.UnknownError(e.message ?: "Failed to sign out")
         }
+    }
+
+    override fun getUserId() : String?{
+        return FirebaseAuthUI.getInstance().auth.currentUser?.uid
     }
 
     override suspend fun deleteAccount() {

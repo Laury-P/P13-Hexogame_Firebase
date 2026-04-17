@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games.screen.account
+package com.openclassrooms.hexagonal.games.ui.screen.account
 
 
 import android.widget.Toast
