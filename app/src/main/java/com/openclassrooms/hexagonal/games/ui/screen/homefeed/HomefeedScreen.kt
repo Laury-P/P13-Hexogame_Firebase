@@ -185,7 +185,7 @@ private fun HomefeedCell(
                 text = post.title,
                 style = MaterialTheme.typography.titleLarge
             )
-            if (post.photoUrl.isNullOrEmpty() == false) {
+            if (!post.photoUrl.isNullOrEmpty()) {
                 AsyncImage(
                     modifier = Modifier
                         .padding(top = 8.dp)
@@ -201,10 +201,11 @@ private fun HomefeedCell(
                     contentScale = ContentScale.Crop,
                 )
             }
-            if (post.description.isNullOrEmpty() == false) {
+            if (!post.description.isNullOrEmpty()) {
                 Text(
                     text = post.description,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp)
                 )
             }
         }
