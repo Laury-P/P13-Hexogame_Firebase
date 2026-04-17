@@ -22,123 +22,118 @@ import javax.inject.Inject
  * It utilizes dependency injection to retrieve a PostRepository instance for interacting with post data.
  */
 @HiltViewModel
-class AddViewModel @Inject constructor(private val postRepository: PostRepository, private val getUserUseCase: GetUserUseCase) : ViewModel() {
+class AddViewModel @Inject constructor(
+    private val postRepository: PostRepository,
+    private val getUserUseCase: GetUserUseCase
+) : ViewModel() {
 
-  private val _isPublishing = MutableStateFlow<IsPublishing>(IsPublishing.Idle)
-  val isPublishing = _isPublishing.asStateFlow()
+    private val _isPublishing = MutableStateFlow<IsPublishing>(IsPublishing.Idle)
+    val isPublishing = _isPublishing.asStateFlow()
 
-  /**
-   * Internal mutable state flow representing the current post being edited.
-   */
-  private var _post = MutableStateFlow(
-    Post(
-      id = UUID.randomUUID().toString(),
-      title = "",
-      description = "",
-      photoUrl = null,
-      timestamp = System.currentTimeMillis(),
-      author = null
+    /**
+     * Internal mutable state flow representing the current post being edited.
+     */
+    private var _post = MutableStateFlow(
+        Post(
+            id = UUID.randomUUID().toString(),
+            title = "",
+            description = "",
+            photoUrl = null,
+            timestamp = System.currentTimeMillis(),
+            author = null
+        )
     )
-  )
-  
-  /**
-   * Public state flow representing the current post being edited.
-   * This is immutable for consumers.
-   */
-  val post: StateFlow<Post>
-    get() = _post
-  
-  /**
-   * StateFlow derived from the post that emits a FormError if the title is empty, null otherwise.
-   */
-  val error = post.map {
-    verifyPost()
-  }.stateIn(
-    scope = viewModelScope,
-    started = SharingStarted.WhileSubscribed(5_000),
-    initialValue = null,
-  )
-  
-  /**
-   * Handles form events like title and description changes.
-   *
-   * @param formEvent The form event to be processed.
-   */
-  fun onAction(formEvent: FormEvent) {
-    when (formEvent) {
-      is FormEvent.DescriptionChanged -> {
-        _post.value = _post.value.copy(
-          description = formEvent.description
-        )
-      }
-      
-      is FormEvent.TitleChanged -> {
-        _post.value = _post.value.copy(
-          title = formEvent.title
-        )
-      }
 
-      is FormEvent.PhotoSelected -> {
-        _post.value = _post.value.copy(
-          photoUrl = formEvent.uri.toString()
-        )
-      }
-    }
-  }
-  
-  /**
-   * Attempts to add the current post to the repository after setting the author.
-   *
-   */
-  fun addPost() {
-    viewModelScope.launch {
-      try {
-        _isPublishing.value = IsPublishing.Publishing
-        val user = getUserUseCase()
+    /**
+     * Public state flow representing the current post being edited.
+     * This is immutable for consumers.
+     */
+    val post: StateFlow<Post>
+        get() = _post
 
-        if (user != null) {
-          postRepository.addPost(
-            _post.value.copy(
-              author = user
-            )
-          )
-          _isPublishing.value = IsPublishing.Published
-        } else {
-          // TODO : Handle the case where user is null
-          Log.d("DEBUG_POST", "user is null")
-          _isPublishing.value = IsPublishing.Idle
+    /**
+     * StateFlow derived from the post that emits a FormError if the title is empty, null otherwise.
+     */
+    val error = post.map {
+        verifyPost()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = null,
+    )
+
+    /**
+     * Handles form events like title and description changes.
+     *
+     * @param formEvent The form event to be processed.
+     */
+    fun onAction(formEvent: FormEvent) {
+        when (formEvent) {
+            is FormEvent.DescriptionChanged -> {
+                _post.value = _post.value.copy(
+                    description = formEvent.description
+                )
+            }
+
+            is FormEvent.TitleChanged -> {
+                _post.value = _post.value.copy(
+                    title = formEvent.title
+                )
+            }
+
+            is FormEvent.PhotoSelected -> {
+                _post.value = _post.value.copy(
+                    photoUrl = formEvent.uri.toString()
+                )
+            }
         }
-      } catch (e: Exception){
-        _isPublishing.value = IsPublishing.Idle
-        //TODO: Handle the exception when id est null exception needReauth
-        Log.d("DEBUG_POST_viewmodel", e.message ?: "Unknown error")
-      }
+    }
 
+    /**
+     * Attempts to add the current post to the repository after setting the author.
+     *
+     */
+    fun addPost() {
+        viewModelScope.launch {
+            _isPublishing.value = IsPublishing.Publishing
+            val user = getUserUseCase()
+
+            if (user != null) {
+                val result = postRepository.addPost(
+                    _post.value.copy(
+                        author = user
+                    )
+                )
+                if (result.isSuccess) _isPublishing.value = IsPublishing.Published
+            } else {
+                // TODO : Handle the case where user is null
+                _isPublishing.value = IsPublishing.Idle
+            }
+        }
     }
-  }
-  
-  /**
-   * Verifies mandatory fields of the post
-   * and returns a corresponding FormError if so.
-   *
-   * @return A FormError.TitleError if title is empty, null otherwise.
-   */
-  private fun verifyPost(): FormError? {
-    when {
-      _post.value.title.isEmpty() -> return FormError.TitleError
-      _post.value.description.isNullOrEmpty() && _post.value.photoUrl.isNullOrEmpty() -> return FormError.DescriptionError
+
+    /**
+     * Verifies mandatory fields of the post
+     * and returns a corresponding FormError if so.
+     *
+     * @return A FormError.TitleError if title is empty, null otherwise.
+     */
+    private fun verifyPost(): FormError? {
+        when {
+            _post.value.title.isEmpty() -> return FormError.TitleError
+            _post.value.description.isNullOrEmpty() && _post.value.photoUrl.isNullOrEmpty() -> return FormError.DescriptionError
+        }
+        return if (_post.value.title.isEmpty()) {
+            FormError.TitleError
+        } else {
+            null
+        }
     }
-    return if (_post.value.title.isEmpty()) {
-      FormError.TitleError
-    } else {
-      null
-    }
-  }
-  
+
 }
 
 sealed class IsPublishing {
-  object Idle : IsPublishing()
-  object Publishing : IsPublishing()
-  object Published : IsPublishing()
+    object Idle : IsPublishing()
+    object Publishing : IsPublishing()
+    object Published : IsPublishing()
 }

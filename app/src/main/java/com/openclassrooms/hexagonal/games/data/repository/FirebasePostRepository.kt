@@ -15,9 +15,7 @@ class FirebasePostRepository @Inject constructor(private val firestore: Firebase
     override val posts: Flow<List<Post>>
         get() = TODO("Not yet implemented")
 
-    override suspend fun addPost(post: Post) {
-        try {
-            Log.d("DEBUG_POST", "debut de addpost repository")
+    override suspend fun addPost(post: Post) : Result<Unit> = runCatching {
             var finalImageUrl: String? = null
 
             if (post.photoUrl != null) {
@@ -31,10 +29,7 @@ class FirebasePostRepository @Inject constructor(private val firestore: Firebase
             val newPost = post.copy(photoUrl = finalImageUrl)
 
             firestore.collection("posts").add(newPost).await()
-        } catch (e: Exception) {
-            Log.e("FirebasePostRepository", e.message ?: "Unknown error")
-        }
-
-
     }
+
+
 }
