@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.data.repository
 
-import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
