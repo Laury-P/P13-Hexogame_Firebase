@@ -36,7 +36,7 @@ class FirebasePostRepository @Inject constructor(private val firestore: Firebase
             }
             val newPost = post.copy(photoUrl = finalImageUrl)
 
-            firestore.collection("posts").add(newPost).await()
+            firestore.collection("posts").document(post.id).set(newPost).await()
     }
 
 
