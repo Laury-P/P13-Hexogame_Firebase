@@ -35,7 +35,7 @@ class AddViewModel @Inject constructor(
      */
     private var _post = MutableStateFlow(
         Post(
-            id = UUID.randomUUID().toString(),
+            id = "UUID.randomUUID().toString()",
             title = "",
             description = "",
             photoUrl = null,

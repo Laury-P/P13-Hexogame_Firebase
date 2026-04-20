@@ -2,7 +2,7 @@ package com.openclassrooms.hexagonal.games.ui.screen.homefeed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.hexagonal.games.data.repository.PostRepository
+import com.openclassrooms.hexagonal.games.domain.repository.PostRepository
 import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.usecases.GetUserLogStateUseCase
