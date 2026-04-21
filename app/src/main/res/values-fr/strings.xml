@@ -18,6 +18,7 @@
   <string name="account">Mon compte</string>
   <string name="signOutButton">Déconnexion</string>
   <string name="deleteAccountButton">Suppression du compte</string>
+  <string name="retry_button">Réessayer</string>
 
   <string name="loggedin_to_post">Un compte est nécessaire pour ajouter une publication</string>
   <string name="photo_button">Sélectionner une photo</string>

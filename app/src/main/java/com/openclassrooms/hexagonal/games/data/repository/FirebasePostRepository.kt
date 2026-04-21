@@ -8,7 +8,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.repository.PostRepository
+import com.openclassrooms.hexagonal.games.ui.util.UiState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
@@ -18,6 +20,7 @@ class FirebasePostRepository @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val storage: FirebaseStorage
 ) : PostRepository {
+
     override val posts: Flow<List<Post>> = firestore.collection("posts")
         .orderBy("timestamp", Query.Direction.DESCENDING)
         .snapshots()
@@ -43,23 +46,29 @@ class FirebasePostRepository @Inject constructor(
         firestore.collection("posts").document(post.id).set(newPost).await()
     }
 
-    override fun getPostById(postId: String): Flow<Post?> =
+    override fun getPostById(postId: String): Flow<UiState<Post?>> =
         firestore.collection("posts")
             .document(postId)
             .snapshots()
             .map { document ->
-                document.toObject(Post::class.java)
+                UiState.Success(document.toObject(Post::class.java))
+            }
+            .catch { exception ->
+                UiState.Error(exception.message ?: "Unknown error")
             }
 
-    override fun getCommentsByPostId(postId: String): Flow<List<Comment>> =
+    override fun getCommentsByPostId(postId: String): Flow<UiState<List<Comment>>> =
         firestore.collection("posts")
             .document(postId)
             .collection("comments")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .snapshots()
             .map { queryDocumentSnapshots ->
-                queryDocumentSnapshots.documents.mapNotNull { document ->
+                val comments = queryDocumentSnapshots.documents.mapNotNull { document ->
                     document.toObject(Comment::class.java)
                 }
+                UiState.Success(comments)
+            }.catch { exception ->
+                UiState.Error(exception.message ?: "Unknown error")
             }
 }

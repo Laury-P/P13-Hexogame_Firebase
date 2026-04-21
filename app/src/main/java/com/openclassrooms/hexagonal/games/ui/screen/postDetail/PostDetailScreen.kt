@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -22,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -39,6 +42,7 @@ import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.model.Post
+import com.openclassrooms.hexagonal.games.ui.util.UiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,12 +52,14 @@ fun PostDetailScreen(
     onBackClick: () -> Unit,
     onFABClick: () -> Unit = {}
 ) {
-    val post by viewModel.post.collectAsState()
-    val comments by viewModel.comments.collectAsState()
+    val postState by viewModel.post.collectAsState()
+    val commentsState by viewModel.comments.collectAsState()
     val logState by viewModel.authState.collectAsState()
     val context = LocalContext.current
 
-    viewModel.loadPost(postId)
+    LaunchedEffect(postId) {
+        viewModel.loadPost(postId)
+    }
 
     Scaffold(
         modifier = Modifier,
@@ -68,7 +74,8 @@ fun PostDetailScreen(
                     }
                 },
                 title = {
-                    Text(text = post?.title ?: "")
+                    if (postState is UiState.Success)
+                        Text(text = (postState as UiState.Success).data?.title ?: "")
                 },
             )
         },
@@ -93,11 +100,26 @@ fun PostDetailScreen(
         floatingActionButtonPosition = FabPosition.End
 
     ) { contentPadding ->
-        PostDetailContent(
-            modifier = Modifier.padding(contentPadding),
-            post = post,
-            comments = comments
-        )
+        when(val state = postState) {
+            is UiState.Error -> {
+                Text(text = state.message)
+                Button(onClick = { viewModel.loadPost(postId) }) {
+                    Text(text = stringResource(R.string.retry_button))
+                }
+            }
+            is UiState.Loading -> CircularProgressIndicator()
+            is UiState.Success -> {
+                PostDetailContent(
+                    modifier = Modifier.padding(contentPadding),
+                    post = state.data,
+                    commentsState = commentsState,
+                    retryButton = { viewModel.loadPost(postId) }
+                )
+            }
+            else -> {}
+            }
+
+
     }
 }
 
@@ -105,7 +127,8 @@ fun PostDetailScreen(
 private fun PostDetailContent(
     modifier: Modifier = Modifier,
     post: Post?,
-    comments: List<Comment>
+    commentsState: UiState<List<Comment>>,
+    retryButton: () -> Unit
 ) {
     LazyColumn(modifier = modifier.padding(8.dp)) {
         item {
@@ -155,23 +178,34 @@ private fun PostDetailContent(
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
+        when(val comments = commentsState) {
+            is UiState.Error -> {
+                item {
+                    Text(text = comments.message)
+                    Button(onClick = { retryButton() }) {
+                        Text(text = stringResource(R.string.retry_button))
+                    }
+                }
+            }
+            is UiState.Loading -> item {CircularProgressIndicator()}
+            is UiState.Success -> {
+                if (comments.data.isEmpty()) {
+                    item {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                        Text(text = stringResource(id = R.string.no_comments))
+                    }
+                } else {
+                    items(commentsState.data) { comment ->
+                        CommentCell(comment = comment)
+                    }
+                }
+            }
+            else -> {}
 
-        if (comments.isEmpty()) {
-            item {
-                HorizontalDivider(
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-                Text(text = stringResource(id = R.string.no_comments))
-            }
-        } else {
-            items(comments) { comment ->
-                CommentCell(comment = comment)
-            }
         }
-
-
     }
-
 }
 
 @Composable
