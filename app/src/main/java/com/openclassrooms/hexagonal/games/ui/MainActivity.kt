@@ -16,6 +16,7 @@ import com.openclassrooms.hexagonal.games.ui.screen.Screen
 import com.openclassrooms.hexagonal.games.ui.screen.account.AccountScreen
 import com.openclassrooms.hexagonal.games.ui.screen.account.LogScreen
 import com.openclassrooms.hexagonal.games.ui.screen.ad.AddScreen
+import com.openclassrooms.hexagonal.games.ui.screen.comment.AddCommentScreen
 import com.openclassrooms.hexagonal.games.ui.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.ui.screen.postDetail.PostDetailScreen
 import com.openclassrooms.hexagonal.games.ui.screen.settings.SettingsScreen
@@ -113,10 +114,17 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
 
     composable(
       route = Screen.PostDetail.route,
-      arguments = Screen.PostDetail.navArguments
+      arguments = Screen.PostDetail.navArguments,
     ) {
       PostDetailScreen(
         postId = it.arguments?.getString("postId") ?: "",
+        onBackClick = { navHostController.navigateUp() },
+        onFABClick = { navHostController.navigate(Screen.AddComment.route) }
+      )
+    }
+
+    composable(route = Screen.AddComment.route) {
+      AddCommentScreen(
         onBackClick = { navHostController.navigateUp() }
       )
     }

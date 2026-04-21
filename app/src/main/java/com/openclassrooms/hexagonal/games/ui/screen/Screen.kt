@@ -24,5 +24,8 @@ sealed class Screen(
     ){
         fun createRoute(postId: String) = "postDetail/$postId"
     }
+
+    data object AddComment : Screen("AddComment")
+
 }
 

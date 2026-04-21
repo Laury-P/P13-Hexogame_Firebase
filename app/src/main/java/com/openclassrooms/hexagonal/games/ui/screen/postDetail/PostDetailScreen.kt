@@ -50,7 +50,7 @@ fun PostDetailScreen(
     postId: String,
     viewModel: PostDetailViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
-    onFABClick: () -> Unit = {}
+    onFABClick: () -> Unit
 ) {
     val postState by viewModel.post.collectAsState()
     val commentsState by viewModel.comments.collectAsState()
