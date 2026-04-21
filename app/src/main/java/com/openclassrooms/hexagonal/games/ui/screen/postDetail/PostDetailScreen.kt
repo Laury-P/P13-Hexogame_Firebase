@@ -1,16 +1,19 @@
 package com.openclassrooms.hexagonal.games.ui.screen.postDetail
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +35,7 @@ import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.util.DebugLogger
 import com.openclassrooms.hexagonal.games.R
+import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +46,8 @@ fun PostDetailScreen(
     onBackClick: () -> Unit
 ) {
     val post by viewModel.post.collectAsState()
+    val comments by viewModel.comments.collectAsState()
+
     viewModel.loadPost(postId)
 
     Scaffold(
@@ -74,19 +80,17 @@ fun PostDetailScreen(
     ) { contentPadding ->
         PostDetailContent(
             modifier = Modifier.padding(contentPadding),
-            post = post
+            post = post,
+            comments = comments
         )
-
-
     }
-
-
 }
 
 @Composable
 private fun PostDetailContent(
     modifier: Modifier = Modifier,
-    post: Post?
+    post: Post?,
+    comments: List<Comment>
 ) {
     LazyColumn(modifier = modifier.padding( 8.dp)) {
         item {
@@ -128,5 +132,45 @@ private fun PostDetailContent(
                 )
             }
         }
+
+        item{
+            Text(
+                text = stringResource(id = R.string.comments),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
+        items(comments){ comment ->
+            CommentCell(comment = comment)
+        }
     }
+
+}
+
+@Composable
+fun CommentCell(
+    comment: Comment
+) {
+    HorizontalDivider(
+        modifier = Modifier.padding(top = 8.dp)
+    )
+    Column(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Text(
+            text = stringResource(
+                id = R.string.by,
+                comment.author?.firstname ?: "",
+                comment.author?.lastname ?: ""
+            ),
+            style = MaterialTheme.typography.titleSmall
+        )
+        Text(
+            text = comment.content,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+    }
+
 }

@@ -23,4 +23,7 @@
   <string name="photo_button">Select a photo</string>
   <string name="photo_description">Selected photo</string>
 
+  <string name="comments">Comments</string>
+
+
 </resources>
