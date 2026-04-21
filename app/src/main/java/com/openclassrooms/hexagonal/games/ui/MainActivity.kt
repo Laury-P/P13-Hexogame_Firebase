@@ -116,7 +116,8 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       arguments = Screen.PostDetail.navArguments
     ) {
       PostDetailScreen(
-        postId = it.arguments?.getString("postId") ?: ""
+        postId = it.arguments?.getString("postId") ?: "",
+        onBackClick = { navHostController.navigateUp() }
       )
     }
   }
