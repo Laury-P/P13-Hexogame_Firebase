@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.snapshots
 import com.google.firebase.storage.FirebaseStorage
+import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
@@ -47,6 +48,18 @@ class FirebasePostRepository @Inject constructor(
             .document(postId)
             .snapshots()
             .map { document ->
-                document.toObject(Post::class.java)}
+                document.toObject(Post::class.java)
+            }
 
+    override fun getCommentsByPostId(postId: String): Flow<List<Comment>> =
+        firestore.collection("posts")
+            .document(postId)
+            .collection("comments")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .snapshots()
+            .map { queryDocumentSnapshots ->
+                queryDocumentSnapshots.documents.mapNotNull { document ->
+                    document.toObject(Comment::class.java)
+                }
+            }
 }
