@@ -18,9 +18,14 @@
   <string name="account">Mon compte</string>
   <string name="signOutButton">Déconnexion</string>
   <string name="deleteAccountButton">Suppression du compte</string>
+  <string name="retry_button">Réessayer</string>
 
   <string name="loggedin_to_post">Un compte est nécessaire pour ajouter une publication</string>
   <string name="photo_button">Sélectionner une photo</string>
   <string name="photo_description">Photo sélectionné</string>
+
+  <string name="comments">Commentaires</string>
+  <string name="no_comments">Soyer le premier à commenter.</string>
+  <string name="loggedin_to_comment">Un compte est nécessaire pour ajouter un commentaire</string>
 
 </resources>
