@@ -3,18 +3,26 @@ package com.openclassrooms.hexagonal.games.ui.screen.postDetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.domain.model.Comment
+import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.repository.PostRepository
+import com.openclassrooms.hexagonal.games.domain.usecases.GetUserLogStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    getUserLogStateUseCase: GetUserLogStateUseCase
 ) : ViewModel() {
+
+    val authState : StateFlow<LocalAuthState> = getUserLogStateUseCase()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), LocalAuthState.LoggedOut)
 
     private val _post = MutableStateFlow<Post?>(null)
     val post: StateFlow<Post?> = _post
@@ -34,5 +42,7 @@ class PostDetailViewModel @Inject constructor(
             }
         }
     }
+
+
 
 }

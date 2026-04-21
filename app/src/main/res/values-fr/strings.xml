@@ -24,5 +24,7 @@
   <string name="photo_description">Photo sélectionné</string>
 
   <string name="comments">Commentaires</string>
+  <string name="no_comments">Soyer le premier à commenter.</string>
+  <string name="loggedin_to_comment">Un compte est nécessaire pour ajouter un commentaire</string>
 
 </resources>

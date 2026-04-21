@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen.postDetail
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +37,7 @@ import coil.imageLoader
 import coil.util.DebugLogger
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Comment
+import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.model.Post
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,10 +45,13 @@ import com.openclassrooms.hexagonal.games.domain.model.Post
 fun PostDetailScreen(
     postId: String,
     viewModel: PostDetailViewModel = hiltViewModel(),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onFABClick: () -> Unit = {}
 ) {
     val post by viewModel.post.collectAsState()
     val comments by viewModel.comments.collectAsState()
+    val logState by viewModel.authState.collectAsState()
+    val context = LocalContext.current
 
     viewModel.loadPost(postId)
 
@@ -55,7 +60,7 @@ fun PostDetailScreen(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { onBackClick() }){
+                    IconButton(onClick = { onBackClick() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.contentDescription_go_back)
@@ -65,10 +70,20 @@ fun PostDetailScreen(
                 title = {
                     Text(text = post?.title ?: "")
                 },
-                )
+            )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = {
+                if (logState is LocalAuthState.LoggedIn) {
+                    onFABClick()
+                } else {
+                    Toast.makeText(
+                        context,
+                        R.string.loggedin_to_comment,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(id = R.string.description_button_add)
@@ -92,7 +107,7 @@ private fun PostDetailContent(
     post: Post?,
     comments: List<Comment>
 ) {
-    LazyColumn(modifier = modifier.padding( 8.dp)) {
+    LazyColumn(modifier = modifier.padding(8.dp)) {
         item {
             Text(
                 text = stringResource(
@@ -103,7 +118,7 @@ private fun PostDetailContent(
             )
         }
         item {
-            Text(text = post?.title?: "", style = MaterialTheme.typography.titleLarge)
+            Text(text = post?.title ?: "", style = MaterialTheme.typography.titleLarge)
         }
         if (!post?.description.isNullOrEmpty()) {
             item {
@@ -114,7 +129,7 @@ private fun PostDetailContent(
                 )
             }
         }
-        if(!post?.photoUrl.isNullOrEmpty()) {
+        if (!post?.photoUrl.isNullOrEmpty()) {
             item {
                 AsyncImage(
                     modifier = Modifier
@@ -133,7 +148,7 @@ private fun PostDetailContent(
             }
         }
 
-        item{
+        item {
             Text(
                 text = stringResource(id = R.string.comments),
                 style = MaterialTheme.typography.titleSmall,
@@ -141,9 +156,20 @@ private fun PostDetailContent(
             )
         }
 
-        items(comments){ comment ->
-            CommentCell(comment = comment)
+        if (comments.isEmpty()) {
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Text(text = stringResource(id = R.string.no_comments))
+            }
+        } else {
+            items(comments) { comment ->
+                CommentCell(comment = comment)
+            }
         }
+
+
     }
 
 }
