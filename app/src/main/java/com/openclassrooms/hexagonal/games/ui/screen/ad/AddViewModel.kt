@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.repository.PostRepository
 import com.openclassrooms.hexagonal.games.domain.usecases.GetUserUseCase
+import com.openclassrooms.hexagonal.games.ui.util.IsPublishing
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -132,8 +133,3 @@ class AddViewModel @Inject constructor(
 
 }
 
-sealed class IsPublishing {
-    object Idle : IsPublishing()
-    object Publishing : IsPublishing()
-    object Published : IsPublishing()
-}

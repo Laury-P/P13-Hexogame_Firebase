@@ -27,5 +27,10 @@
   <string name="comments">Commentaires</string>
   <string name="no_comments">Soyer le premier à commenter.</string>
   <string name="loggedin_to_comment">Un compte est nécessaire pour ajouter un commentaire</string>
+  <string name="add_comment_label">Ajout d\'un commentaire</string>
+  <string name="error_comment">Commentaire non valide</string>
+  <string name="comment_error_user">Utilisateur non valide. Veuillez vous connecter</string>
+  <string name="comment_error_data">Une erreur est survenue. Veuillez vérifier votre connexion et réessayer</string>
+
 
 </resources>
