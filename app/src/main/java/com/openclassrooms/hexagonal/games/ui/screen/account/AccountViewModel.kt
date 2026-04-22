@@ -25,34 +25,36 @@ class AccountViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            try {
-                logoutUseCase()
-            } catch (e: Exception) {
-                // !! because default message defined in repository
-                _events.send(AccountEvent.FailedSignOut(e.message!!))
-            }
+            logoutUseCase()
+                .onSuccess {
+                    _events.send(AccountEvent.AccountDeleted)
+                }
+                .onFailure { e ->
+                    _events.send(AccountEvent.FailedSignOut)
+                    // TODO Send a crashlytics reports?
+                }
         }
     }
 
     fun deleteAccount() {
         viewModelScope.launch {
-            try {
-                deleteAccountUseCase()
-               _events.send(AccountEvent.AccountDeleted)
-            } catch (e: Exception) {
-                when (e) {
-                    is DomainAuthException.NeedsReauth -> {
-                        _events.send(AccountEvent.NeedReauthentification)
-                    }
-                    is DomainAuthException.NetworkError -> {
-                        _events.send(AccountEvent.NetworkError)
-                    }
-                    else -> {
-                        // !! because default message defined in repository
-                        _events.send(AccountEvent.UnknownError(e.message!!))
+            deleteAccountUseCase()
+                .onSuccess { _events.send(AccountEvent.AccountDeleted) }
+                .onFailure { e ->
+                    when (e) {
+                        is DomainAuthException.NeedsReauth -> {
+                            _events.send(AccountEvent.NeedReauthentification)
+                        }
+                        is DomainAuthException.NetworkError -> {
+                            _events.send(AccountEvent.NetworkError)
+                        }
+                        else -> {
+                            // TODO Send error to firebase via crashlytics
+                            _events.send(AccountEvent.UnknownError)
+                        }
                     }
                 }
-            }
+
         }
     }
 }

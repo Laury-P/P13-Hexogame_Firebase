@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen.ad
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -56,6 +58,28 @@ fun AddScreen(
             }
         }
 
+    val isPublishing by viewModel.isPublishing.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    LaunchedEffect(isPublishing) {
+        if (isPublishing is IsPublishing.Published) {
+            onSaveClick()
+        }
+        if (isPublishing is IsPublishing.UserError) {
+            Toast.makeText(
+                context,
+                R.string.error_user,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        if (isPublishing is IsPublishing.DataError) {
+            Toast.makeText(
+                context,
+                R.string.error_data,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -78,13 +102,7 @@ fun AddScreen(
     ) { contentPadding ->
         val post by viewModel.post.collectAsStateWithLifecycle()
         val error by viewModel.error.collectAsStateWithLifecycle()
-        val isPublishing by viewModel.isPublishing.collectAsStateWithLifecycle()
 
-        LaunchedEffect(isPublishing) {
-            if (isPublishing is IsPublishing.Published) {
-                onSaveClick()
-            }
-        }
 
         CreatePost(
             modifier = Modifier.padding(contentPadding),
@@ -155,7 +173,8 @@ private fun CreatePost(
                 onValueChange = { onTitleChanged(it) },
                 label = { Text(stringResource(id = R.string.hint_title)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                singleLine = true
+                singleLine = true,
+                enabled = !loading,
             )
             if (error is FormError.TitleError) {
                 Text(
@@ -170,7 +189,8 @@ private fun CreatePost(
                 value = description,
                 onValueChange = { onDescriptionChanged(it) },
                 label = { Text(stringResource(id = R.string.hint_description)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                enabled = !loading,
             )
             if (photoUri != null) {
                 AsyncImage(
@@ -185,7 +205,8 @@ private fun CreatePost(
             }
             Button(
                 onClick = { onSelectPhotoClick() },
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = 16.dp),
+                enabled = !loading
             ) {
                 Text(text = stringResource(id = R.string.photo_button))
             }

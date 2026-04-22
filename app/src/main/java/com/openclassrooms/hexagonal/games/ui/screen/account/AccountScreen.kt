@@ -39,24 +39,41 @@ fun AccountScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is AccountEvent.NeedReauthentification -> {
+                    Toast.makeText(
+                        context,
+                        R.string.error_user,
+                        Toast.LENGTH_SHORT).show()
                     onAuthenticationNeeded()
                 }
+
                 is AccountEvent.NetworkError -> {
                     Toast.makeText(
                         context,
-                        "Network error, check your internet connection and retry",
+                        R.string.error_data,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
                 is AccountEvent.UnknownError -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.error_unknown, Toast.LENGTH_SHORT).show()
                 }
+
                 is AccountEvent.AccountDeleted -> {
-                    Toast.makeText(context, "Account deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.success_delete_account, Toast.LENGTH_SHORT).show()
                     onHomeFeedNav()
                 }
+
                 is AccountEvent.FailedSignOut -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.error_failed_signout, Toast.LENGTH_SHORT).show()
+                }
+
+                is AccountEvent.SuccessSignOut -> {
+                    Toast.makeText(
+                        context,
+                        R.string.success_signout,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    onHomeFeedNav()
                 }
             }
         }
@@ -81,9 +98,10 @@ fun AccountScreen(
             Button(
                 onClick = {
                     viewModel.logout()
-                    onHomeFeedNav()
                 },
-                modifier = Modifier.padding(12.dp).fillMaxWidth()
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth()
             ) {
                 Text(stringResource(id = R.string.signOutButton))
             }
@@ -92,7 +110,9 @@ fun AccountScreen(
                 onClick = {
                     viewModel.deleteAccount()
                 },
-                modifier = Modifier.padding(12.dp).fillMaxWidth()
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth()
             ) {
                 Text(stringResource(id = R.string.deleteAccountButton))
             }

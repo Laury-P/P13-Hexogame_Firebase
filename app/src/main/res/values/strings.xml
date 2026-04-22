@@ -17,7 +17,10 @@
   <string name="error_description">Invalid description</string>
   <string name="account">My account</string>
   <string name="signOutButton">Sign out</string>
+  <string name="error_failed_signout">Failed to sign out. Please try again.</string>
+  <string name="success_signout">Sign out successful</string>
   <string name="deleteAccountButton">Delete Account</string>
+  <string name="success_delete_account">Account deleted</string>
   <string name="retry_button">Retry</string>
 
   <string name="loggedin_to_post">An account is mandatory in order to add a post</string>
@@ -29,13 +32,8 @@
   <string name="loggedin_to_comment">An account is mandatory in order to add a comment</string>
   <string name="add_comment_label">Add a comment</string>
   <string name="error_comment">Comment not valid</string>
-  <string name="comment_error_user">User not valid. Please sign in</string>
-  <string name="comment_error_data">An error occurred. Please check your connection and try again</string>
-
-
-
-
-
-
+  <string name="error_user">User not valid. Please sign in and retry</string>
+  <string name="error_data">An error occurred. Please check your connection and try again</string>
+  <string name="error_unknown">An error occured</string>
 
 </resources>
