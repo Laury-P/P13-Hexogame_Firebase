@@ -49,7 +49,7 @@ class AddCommentViewModel @Inject constructor(
 
             if (user != null) {
                 val newComment = Comment(
-                    id = "UUID.randomUUID().toString()",
+                    id = UUID.randomUUID().toString(),
                     content = _content.value,
                     author = user,
                     timestamp = System.currentTimeMillis(),
