@@ -24,6 +24,7 @@ import com.openclassrooms.hexagonal.games.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCommentScreen(
+    postId: String,
     modifier: Modifier = Modifier,
     viewModel: AddCommentViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
@@ -71,6 +72,7 @@ fun AddCommentScreen(
             ){
                 Text(text = stringResource(id = R.string.action_save))
             }
+
         }
 
     }

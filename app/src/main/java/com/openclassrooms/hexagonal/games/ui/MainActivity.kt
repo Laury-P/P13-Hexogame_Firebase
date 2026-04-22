@@ -119,13 +119,17 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       PostDetailScreen(
         postId = it.arguments?.getString("postId") ?: "",
         onBackClick = { navHostController.navigateUp() },
-        onFABClick = { navHostController.navigate(Screen.AddComment.route) }
+        onFABClick = { navHostController.navigate(Screen.AddComment.createRoute(it.arguments?.getString("postId") ?: "")) }
       )
     }
 
-    composable(route = Screen.AddComment.route) {
+    composable(
+      route = Screen.AddComment.route,
+      arguments = Screen.AddComment.navArguments,
+    ) {
       AddCommentScreen(
-        onBackClick = { navHostController.navigateUp() }
+        postId = it.arguments?.getString("postId") ?: "",
+        onBackClick = { navHostController.navigateUp() },
       )
     }
   }
