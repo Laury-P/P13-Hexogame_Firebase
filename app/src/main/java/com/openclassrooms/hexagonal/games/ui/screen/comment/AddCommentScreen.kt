@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen.comment
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,10 +38,26 @@ fun AddCommentScreen(
     onBackClick: () -> Unit,
 ) {
     val isPublishing by viewModel.isPublishing.collectAsState()
+    val context = LocalContext.current
+
 
     LaunchedEffect(isPublishing) {
         if (isPublishing is IsPublishing.Published) {
             onBackClick()
+        }
+        if (isPublishing is IsPublishing.UserError) {
+            Toast.makeText(
+                context,
+                R.string.comment_error_user,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        if (isPublishing is IsPublishing.DataError) {
+            Toast.makeText(
+                context,
+                R.string.comment_error_data,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -85,14 +103,17 @@ fun AddCommentScreen(
                     if (error) {
                         Text(text = stringResource(id = R.string.error_comment))
                     }
-                }
+                },
+                enabled = isPublishing !is IsPublishing.Publishing
             )
             Button(
                 modifier = Modifier.padding(16.dp),
                 onClick = { viewModel.addComment(postId) },
                 enabled = !error && isPublishing !is IsPublishing.Publishing
             ){
-                Text(text = stringResource(id = R.string.action_save))
+                if (isPublishing is IsPublishing.DataError) {
+                    Text(text = stringResource(id = R.string.retry_button))
+                } else Text(text = stringResource(id = R.string.action_save))
             }
 
         }

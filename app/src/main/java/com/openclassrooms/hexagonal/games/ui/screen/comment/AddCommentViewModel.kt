@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +41,7 @@ class AddCommentViewModel @Inject constructor(
 
     fun onContentChanged(newContent: String) {
         _content.value = newContent
+        _isPublishing.value = IsPublishing.Idle
     }
 
     fun addComment(postId: String) {
@@ -60,10 +62,10 @@ class AddCommentViewModel @Inject constructor(
                     comment = newComment,
                 )
                 if (result.isSuccess) _isPublishing.value = IsPublishing.Published
+                else _isPublishing.value = IsPublishing.DataError
 
             } else {
-                // TODO : Handle the case where user is null
-                _isPublishing.value = IsPublishing.Idle
+                _isPublishing.value = IsPublishing.UserError
             }
 
         }
