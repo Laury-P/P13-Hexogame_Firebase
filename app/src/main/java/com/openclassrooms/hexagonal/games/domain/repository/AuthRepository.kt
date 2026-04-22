@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     fun userLogState(): Flow<LocalAuthState>
-    suspend fun signOut()
+    suspend fun signOut() : Result<Unit>
     suspend fun deleteAccount()
     fun getUserId() : String?
 

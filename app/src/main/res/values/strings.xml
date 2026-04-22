@@ -17,6 +17,8 @@
   <string name="error_description">Invalid description</string>
   <string name="account">My account</string>
   <string name="signOutButton">Sign out</string>
+  <string name="error_failed_signout">Failed to sign out. Please try again.</string>
+  <string name="success_signout">Sign out successful</string>
   <string name="deleteAccountButton">Delete Account</string>
   <string name="retry_button">Retry</string>
 

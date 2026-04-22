@@ -32,12 +32,8 @@ class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext pri
             }
     }
 
-    override suspend fun signOut() {
-        try {
-            FirebaseAuthUI.getInstance().signOut(context)
-        } catch (e: Exception) {
-            throw DomainAuthException.UnknownError(e.message ?: "Failed to sign out")
-        }
+    override suspend fun signOut() : Result<Unit> = runCatching {
+        FirebaseAuthUI.getInstance().signOut(context)
     }
 
     override fun getUserId() : String?{

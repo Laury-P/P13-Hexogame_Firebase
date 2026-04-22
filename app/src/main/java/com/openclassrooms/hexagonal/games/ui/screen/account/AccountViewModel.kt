@@ -25,12 +25,14 @@ class AccountViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            try {
-                logoutUseCase()
-            } catch (e: Exception) {
-                // !! because default message defined in repository
-                _events.send(AccountEvent.FailedSignOut(e.message!!))
-            }
+            logoutUseCase()
+                .onSuccess {
+                    _events.send(AccountEvent.AccountDeleted)
+                }
+                .onFailure { e ->
+                    _events.send(AccountEvent.FailedSignOut)
+                    // TODO Send a crashlytics repots?
+                }
         }
     }
 
