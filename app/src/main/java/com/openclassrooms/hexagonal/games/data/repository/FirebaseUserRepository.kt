@@ -14,14 +14,10 @@ class FirebaseUserRepository @Inject constructor(private val firestore: Firebase
         return document.toObject(User::class.java)
     }
 
-    override suspend fun addUser(user: User) {
-        try {
-            firestore.collection("users").document(user.id).set(user).await()
-        } catch (e: Exception) {
-            // TODO Gerer l'erreur coté technique
-            throw e
-        }
+    override suspend fun addUser(user: User): Result<Unit> = runCatching {
+        firestore.collection("users").document(user.id).set(user).await()
     }
+
 
 }
 

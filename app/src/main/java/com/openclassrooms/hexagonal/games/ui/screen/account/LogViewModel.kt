@@ -25,13 +25,14 @@ class LogViewModel @Inject constructor(private val userRepository: UserRepositor
 
     fun createUser(user: User) {
         viewModelScope.launch {
-            try {
-                userRepository.addUser(user)
+            val result = userRepository.addUser(user)
+            if (result.isSuccess) {
                 _userExists.value = true
-            } catch (e: Exception) {
-                //TODO Gérer les erreurs coté UI
-                Log.e("LogViewModel", "Error creating user", e)
+            } else {
+                // Send reports to crashlytics
+                Log.e("LogViewModel", "Error creating user", result.exceptionOrNull())
             }
+
         }
     }
 
