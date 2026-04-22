@@ -20,6 +20,7 @@
   <string name="error_failed_signout">Echec de la déconnexion. Veuillez réessayer.</string>
   <string name="success_signout">Déconnexion réussie</string>
   <string name="deleteAccountButton">Suppression du compte</string>
+  <string name="success_delete_account">Compte supprimé.</string>
   <string name="retry_button">Réessayer</string>
 
   <string name="loggedin_to_post">Un compte est nécessaire pour ajouter une publication</string>
@@ -33,6 +34,6 @@
   <string name="error_comment">Commentaire non valide</string>
   <string name="error_user">Utilisateur non valide. Veuillez vous connecter</string>
   <string name="error_data">Une erreur est survenue. Veuillez vérifier votre connexion et réessayer</string>
-
+  <string name="error_unknown">Une erreur est survenue</string>
 
 </resources>
