@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
+import com.openclassrooms.hexagonal.games.ui.util.IsPublishing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
