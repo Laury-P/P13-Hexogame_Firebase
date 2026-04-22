@@ -46,6 +46,19 @@ class FirebasePostRepository @Inject constructor(
         firestore.collection("posts").document(post.id).set(newPost).await()
     }
 
+    override suspend fun addComment(postId: String, comment: Comment): Result<Unit> = runCatching {
+        firestore.collection("posts")
+            .document(postId)
+            .collection("comments")
+            .document(comment.id)
+            .set(comment)
+            .await()
+    }
+
+
+
+
+
     override fun getPostById(postId: String): Flow<UiState<Post?>> =
         firestore.collection("posts")
             .document(postId)

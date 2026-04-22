@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface PostRepository {
     val posts: Flow<List<Post>>
     suspend fun addPost(post: Post) : Result<Unit>
+    suspend fun addComment(postId: String, comment: Comment) : Result<Unit>
     fun getPostById(postId: String): Flow<UiState<Post?>>
     fun getCommentsByPostId(postId: String): Flow<UiState<List<Comment>>>
 
