@@ -50,20 +50,26 @@ class AddCommentViewModel @Inject constructor(
             val user = getUserUseCase()
 
             if (user != null) {
-                val newComment = Comment(
-                    id = UUID.randomUUID().toString(),
-                    content = _content.value,
-                    author = user,
-                    timestamp = System.currentTimeMillis(),
-                    postId = postId
-                )
-                val result = postRepository.addComment(
-                    postId,
-                    comment = newComment,
-                )
-                if (result.isSuccess) _isPublishing.value = IsPublishing.Published
-                else _isPublishing.value = IsPublishing.DataError
-
+                try {
+                    kotlinx.coroutines.withTimeout(10_000L) {
+                        val newComment = Comment(
+                            id = UUID.randomUUID().toString(),
+                            content = _content.value,
+                            author = user,
+                            timestamp = System.currentTimeMillis(),
+                            postId = postId
+                        )
+                        val result = postRepository.addComment(
+                            postId,
+                            comment = newComment,
+                        )
+                        if (result.isSuccess) {
+                            _isPublishing.value = IsPublishing.Published
+                        } else _isPublishing.value = IsPublishing.DataError
+                    }
+                } catch (_: kotlinx.coroutines.TimeoutCancellationException) {
+                    _isPublishing.value = IsPublishing.DataError
+                }
             } else {
                 _isPublishing.value = IsPublishing.UserError
             }
