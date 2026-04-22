@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.ui.screen.ad
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -69,6 +67,7 @@ class AddViewModel @Inject constructor(
      * @param formEvent The form event to be processed.
      */
     fun onAction(formEvent: FormEvent) {
+        _isPublishing.value = IsPublishing.Idle // Remise a zero si une modification est faite
         when (formEvent) {
             is FormEvent.DescriptionChanged -> {
                 _post.value = _post.value.copy(
@@ -86,6 +85,7 @@ class AddViewModel @Inject constructor(
                 _post.value = _post.value.copy(
                     photoUrl = formEvent.uri.toString()
                 )
+
             }
         }
     }
@@ -106,9 +106,9 @@ class AddViewModel @Inject constructor(
                     )
                 )
                 if (result.isSuccess) _isPublishing.value = IsPublishing.Published
+                else _isPublishing.value = IsPublishing.DataError
             } else {
-                // TODO : Handle the case where user is null
-                _isPublishing.value = IsPublishing.Idle
+                _isPublishing.value = IsPublishing.UserError
             }
         }
     }

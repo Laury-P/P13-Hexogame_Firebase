@@ -48,14 +48,14 @@ fun AddCommentScreen(
         if (isPublishing is IsPublishing.UserError) {
             Toast.makeText(
                 context,
-                R.string.comment_error_user,
+                R.string.error_user,
                 Toast.LENGTH_SHORT
             ).show()
         }
         if (isPublishing is IsPublishing.DataError) {
             Toast.makeText(
                 context,
-                R.string.comment_error_data,
+                R.string.error_data,
                 Toast.LENGTH_SHORT
             ).show()
         }
