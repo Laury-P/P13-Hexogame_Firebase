@@ -29,9 +29,8 @@ class AccountViewModel @Inject constructor(
                 .onSuccess {
                     _events.send(AccountEvent.AccountDeleted)
                 }
-                .onFailure { e ->
+                .onFailure { _ ->
                     _events.send(AccountEvent.FailedSignOut)
-                    // TODO Send a crashlytics reports?
                 }
         }
     }
@@ -49,7 +48,6 @@ class AccountViewModel @Inject constructor(
                             _events.send(AccountEvent.NetworkError)
                         }
                         else -> {
-                            // TODO Send error to firebase via crashlytics
                             _events.send(AccountEvent.UnknownError)
                         }
                     }

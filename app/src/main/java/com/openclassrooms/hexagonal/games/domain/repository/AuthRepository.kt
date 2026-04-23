@@ -8,6 +8,7 @@ interface AuthRepository {
     suspend fun signOut(): Result<Unit>
     suspend fun deleteAccount(): Result<Unit>
     fun getUserId(): String?
+    suspend fun checkIfReauthIsNeeded(): Boolean
 
 }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import com.firebase.ui.auth.AuthException
 import com.firebase.ui.auth.AuthState
 import com.firebase.ui.auth.FirebaseAuthUI
+import com.google.firebase.Firebase
 import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
@@ -50,5 +51,14 @@ class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext pri
                 else -> DomainAuthException.UnknownError(e.message ?: "Unknown error")
             }
     }}
+
+    override suspend fun checkIfReauthIsNeeded(): Boolean {
+        val user = FirebaseAuthUI.getInstance().getCurrentUser() ?: return true
+        val lastLogin = user.metadata?.lastSignInTimestamp ?: 0L
+        val now = System.currentTimeMillis()
+
+        // Si la session a plus de 5 minute
+        return (now - lastLogin) < 300_000
+    }
 
 }
