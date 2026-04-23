@@ -211,7 +211,7 @@ private fun CreatePost(
                 Text(text = stringResource(id = R.string.photo_button))
             }
 
-            if (error is FormError.DescriptionError) {
+            if (error is FormError.DescriptionOrPhotoError) {
                 Text(
                     text = stringResource(id = error.messageRes),
                     color = MaterialTheme.colorScheme.error,
