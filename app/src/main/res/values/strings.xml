@@ -3,6 +3,7 @@
   <string name="action_settings">Settings</string>
   <string name="add_fragment_label">Add a post</string>
   <string name="homefeed_fragment_label">Home</string>
+  <string name="no_posts">No posts</string>
   <string name="by">By %2$s %1$s</string> <!-- %1$s est le prenom et %2$s est le nom -->
   <string name="notification_enable">Enable notifications</string>
   <string name="notification_disable">Disable notifications</string>

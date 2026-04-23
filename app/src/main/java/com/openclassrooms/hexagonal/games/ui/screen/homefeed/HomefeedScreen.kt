@@ -147,15 +147,18 @@ private fun HomefeedList(
     posts: List<Post>,
     onPostClick: (Post) -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier.padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(posts) { post ->
-            HomefeedCell(
-                post = post,
-                onPostClick = onPostClick
-            )
+    if (posts.isEmpty()) Text(text = stringResource(id = R.string.no_posts))
+    else {
+        LazyColumn(
+            modifier = modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(posts) { post ->
+                HomefeedCell(
+                    post = post,
+                    onPostClick = onPostClick
+                )
+            }
         }
     }
 }
