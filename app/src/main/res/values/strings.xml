@@ -22,6 +22,9 @@
   <string name="deleteAccountButton">Delete Account</string>
   <string name="success_delete_account">Account deleted</string>
   <string name="retry_button">Retry</string>
+  <string name="cancel_button">Cancel</string>
+  <string name="deleteAccountTitle">Delete Account</string>
+  <string name="deleteAccountText">Are you sure you want to delete your account? This action cannot be undone.</string>
 
   <string name="loggedin_to_post">An account is mandatory in order to add a post</string>
   <string name="photo_button">Select a photo</string>
