@@ -22,6 +22,9 @@
   <string name="deleteAccountButton">Suppression du compte</string>
   <string name="success_delete_account">Compte supprimé.</string>
   <string name="retry_button">Réessayer</string>
+  <string name="cancel_button">Annuler</string>
+  <string name="deleteAccountTitle">Suppression du compte</string>
+  <string name="deleteAccountText">Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée.</string>
 
   <string name="loggedin_to_post">Un compte est nécessaire pour ajouter une publication</string>
   <string name="photo_button">Sélectionner une photo</string>

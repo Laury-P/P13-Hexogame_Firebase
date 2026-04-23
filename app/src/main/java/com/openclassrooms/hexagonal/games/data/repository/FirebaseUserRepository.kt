@@ -18,6 +18,9 @@ class FirebaseUserRepository @Inject constructor(private val firestore: Firebase
         firestore.collection("users").document(user.id).set(user).await()
     }
 
+    override suspend fun deleteUser(userId: String): Result<Unit> = runCatching {
+        firestore.collection("users").document(userId).delete().await()
+    }
 
 }
 

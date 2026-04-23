@@ -55,10 +55,6 @@ class FirebasePostRepository @Inject constructor(
             .await()
     }
 
-
-
-
-
     override fun getPostById(postId: String): Flow<UiState<Post?>> =
         firestore.collection("posts")
             .document(postId)
@@ -84,4 +80,47 @@ class FirebasePostRepository @Inject constructor(
             }.catch { exception ->
                 UiState.Error(exception.message ?: "Unknown error")
             }
+
+    override suspend fun deleteAllPostsFromUser(userId: String): Result<Unit> = runCatching {
+        val batch = firestore.batch()
+
+        val posts = firestore.collection("posts")
+            .whereEqualTo("author.id", userId)
+            .get()
+            .await()
+
+        posts.documents.forEach { document ->
+            // Préparation de la suppression de tous les commentaires du posts
+            val comments = document.reference.collection("comments").get().await()
+            comments.documents.forEach { commentDocument ->
+                batch.delete(commentDocument.reference)
+            }
+
+            // Suppression de la photo
+            val photoUrl = document.getString("photoUrl")
+            if (!photoUrl.isNullOrEmpty()) {
+                storage.getReferenceFromUrl(photoUrl).delete().await()
+            }
+
+            // Préparation de la suppression du post
+            batch.delete(document.reference)
+        }
+        batch.commit().await()
+    }
+
+    override suspend fun deleteAllCommentsFromUser(userId: String): Result<Unit> = runCatching {
+        val batch = firestore.batch()
+
+        val comments = firestore.collectionGroup("comments")
+            .whereEqualTo("author.id", userId)
+            .get()
+            .await()
+
+        comments.documents.forEach { document ->
+            batch.delete(document.reference)
+        }
+        batch.commit().await()
+    }
+
+
 }

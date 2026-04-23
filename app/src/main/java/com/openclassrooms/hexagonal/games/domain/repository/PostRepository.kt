@@ -11,5 +11,7 @@ interface PostRepository {
     suspend fun addComment(postId: String, comment: Comment) : Result<Unit>
     fun getPostById(postId: String): Flow<UiState<Post?>>
     fun getCommentsByPostId(postId: String): Flow<UiState<List<Comment>>>
+    suspend fun deleteAllPostsFromUser(userId: String): Result<Unit>
+    suspend fun deleteAllCommentsFromUser(userId: String): Result<Unit>
 
 }
