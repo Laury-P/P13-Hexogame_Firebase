@@ -2,7 +2,7 @@ package com.openclassrooms.hexagonal.games.domain.model
 
 import java.io.Serializable
 
-data class Comment (
+data class Comment(
     val id: String = "",
     val content: String = "",
     val author: User? = null,

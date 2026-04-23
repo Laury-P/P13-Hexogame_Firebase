@@ -30,107 +30,115 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    checkNotificationPermission()
+        checkNotificationPermission()
 
-    setContent {
-      val navController = rememberNavController()
+        setContent {
+            val navController = rememberNavController()
 
-      HexagonalGamesTheme {
-        HexagonalGamesNavHost(navHostController = navController)
-      }
+            HexagonalGamesTheme {
+                HexagonalGamesNavHost(navHostController = navController)
+            }
+        }
     }
-  }
 
-  private fun checkNotificationPermission() {
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-      val hasPermissions = ContextCompat.checkSelfPermission(
-        this,
-        Manifest.permission.POST_NOTIFICATIONS
-      ) == PackageManager.PERMISSION_GRANTED
+    private fun checkNotificationPermission() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            val hasPermissions = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
 
-      if (!hasPermissions) {
-        ActivityCompat.requestPermissions(
-          this,
-          arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-          101
-        )
-      }
+            if (!hasPermissions) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    101
+                )
+            }
+        }
     }
-  }
 
 }
 
 @Composable
 fun HexagonalGamesNavHost(navHostController: NavHostController) {
-  NavHost(
-    navController = navHostController,
-    startDestination = Screen.Homefeed.route
-  ) {
-    composable(route = Screen.Homefeed.route) {
-      HomefeedScreen(
-        onPostClick = { post ->
-          navHostController.navigate(Screen.PostDetail.createRoute(post.id))
-        },
-        onSettingsClick = {
-          navHostController.navigate(Screen.Settings.route)
-        },
-        onFABClick = {
-          navHostController.navigate(Screen.AddPost.route)
-        },
-        onNavigateToLogin = {
-          navHostController.navigate(Screen.Login.route)
-        },
-        onNavigateToAccountManagement = {
-          navHostController.navigate(Screen.Account.route)
+    NavHost(
+        navController = navHostController,
+        startDestination = Screen.Homefeed.route
+    ) {
+        composable(route = Screen.Homefeed.route) {
+            HomefeedScreen(
+                onPostClick = { post ->
+                    navHostController.navigate(Screen.PostDetail.createRoute(post.id))
+                },
+                onSettingsClick = {
+                    navHostController.navigate(Screen.Settings.route)
+                },
+                onFABClick = {
+                    navHostController.navigate(Screen.AddPost.route)
+                },
+                onNavigateToLogin = {
+                    navHostController.navigate(Screen.Login.route)
+                },
+                onNavigateToAccountManagement = {
+                    navHostController.navigate(Screen.Account.route)
+                }
+            )
         }
-      )
-    }
-    composable(route = Screen.AddPost.route) {
-      AddScreen(
-        onBackClick = { navHostController.navigateUp() },
-        onSaveClick = { navHostController.navigateUp() }
-      )
-    }
-    composable(route = Screen.Settings.route) {
-      SettingsScreen(
-        onBackClick = { navHostController.navigateUp() }
-      )
-    }
-    composable(route = Screen.Login.route) {
-      LogScreen(
-        onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) }
-      )
-    }
+        composable(route = Screen.AddPost.route) {
+            AddScreen(
+                onBackClick = { navHostController.navigateUp() },
+                onSaveClick = { navHostController.navigateUp() }
+            )
+        }
+        composable(route = Screen.Settings.route) {
+            SettingsScreen(
+                onBackClick = { navHostController.navigateUp() }
+            )
+        }
+        composable(route = Screen.Login.route) {
+            LogScreen(
+                onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) }
+            )
+        }
 
-    composable(route = Screen.Account.route) {
-      AccountScreen(
-        onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) },
-        onAuthenticationNeeded = { navHostController.navigate(Screen.Login.route)}
-      )
-    }
+        composable(route = Screen.Account.route) {
+            AccountScreen(
+                onHomeFeedNav = { navHostController.navigate(Screen.Homefeed.route) },
+                onAuthenticationNeeded = { navHostController.navigate(Screen.Login.route) }
+            )
+        }
 
-    composable(
-      route = Screen.PostDetail.route,
-      arguments = Screen.PostDetail.navArguments,
-    ) {
-      PostDetailScreen(
-        postId = it.arguments?.getString("postId") ?: "",
-        onBackClick = { navHostController.navigateUp() },
-        onFABClick = { navHostController.navigate(Screen.AddComment.createRoute(it.arguments?.getString("postId") ?: "")) }
-      )
-    }
+        composable(
+            route = Screen.PostDetail.route,
+            arguments = Screen.PostDetail.navArguments,
+        ) {
+            PostDetailScreen(
+                postId = it.arguments?.getString("postId") ?: "",
+                onBackClick = { navHostController.navigateUp() },
+                onFABClick = {
+                    navHostController.navigate(
+                        Screen.AddComment.createRoute(
+                            it.arguments?.getString(
+                                "postId"
+                            ) ?: ""
+                        )
+                    )
+                }
+            )
+        }
 
-    composable(
-      route = Screen.AddComment.route,
-      arguments = Screen.AddComment.navArguments,
-    ) {
-      AddCommentScreen(
-        postId = it.arguments?.getString("postId") ?: "",
-        onBackClick = { navHostController.navigateUp() },
-      )
+        composable(
+            route = Screen.AddComment.route,
+            arguments = Screen.AddComment.navArguments,
+        ) {
+            AddCommentScreen(
+                postId = it.arguments?.getString("postId") ?: "",
+                onBackClick = { navHostController.navigateUp() },
+            )
+        }
     }
-  }
 }

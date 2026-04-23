@@ -47,7 +47,8 @@ fun AccountScreen(
                     Toast.makeText(
                         context,
                         R.string.error_user,
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                     onAuthenticationNeeded()
                 }
 
@@ -64,12 +65,14 @@ fun AccountScreen(
                 }
 
                 is AccountEvent.AccountDeleted -> {
-                    Toast.makeText(context, R.string.success_delete_account, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.success_delete_account, Toast.LENGTH_SHORT)
+                        .show()
                     onHomeFeedNav()
                 }
 
                 is AccountEvent.FailedSignOut -> {
-                    Toast.makeText(context, R.string.error_failed_signout, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.error_failed_signout, Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 is AccountEvent.SuccessSignOut -> {
@@ -126,7 +129,7 @@ fun AccountScreen(
 
     }
 
-    if (showDeleteDialog.value){
+    if (showDeleteDialog.value) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog.value = false },
             confirmButton = {
@@ -150,8 +153,6 @@ fun AccountScreen(
             }
         )
     }
-
-
 
 
 }

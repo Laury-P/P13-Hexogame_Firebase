@@ -21,14 +21,14 @@ sealed class Screen(
     data object PostDetail : Screen(
         route = "postDetail/{postId}",
         navArguments = listOf(navArgument("postId") { type = NavType.StringType })
-    ){
+    ) {
         fun createRoute(postId: String) = "postDetail/$postId"
     }
 
     data object AddComment : Screen(
-        route ="AddComment/{postId}",
+        route = "AddComment/{postId}",
         navArguments = listOf(navArgument("postId") { type = NavType.StringType })
-    ){
+    ) {
         fun createRoute(postId: String) = "AddComment/$postId"
     }
 

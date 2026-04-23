@@ -11,7 +11,7 @@ class DeleteAccountUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke() : Result<Unit> {
+    suspend operator fun invoke(): Result<Unit> {
         val userId = authRepository.getUserId()
         if (userId == null || authRepository.checkIfReauthIsNeeded()) {
             return Result.failure(DomainAuthException.NeedsReauth())
@@ -19,17 +19,20 @@ class DeleteAccountUseCase @Inject constructor(
         postRepository.deleteAllPostsFromUser(userId)
             .onFailure {
                 //TODO send error to crashlytics
-                return Result.failure(Exception("Failed to delete posts")) }
+                return Result.failure(Exception("Failed to delete posts"))
+            }
 
         postRepository.deleteAllCommentsFromUser(userId)
             .onFailure {
                 //TODO send error to crashlytics
-                return Result.failure(Exception("Failed to delete comments")) }
+                return Result.failure(Exception("Failed to delete comments"))
+            }
 
         userRepository.deleteUser(userId)
             .onFailure {
                 //TODO send error to crashlytics
-                return Result.failure(Exception("Failed to delete user")) }
+                return Result.failure(Exception("Failed to delete user"))
+            }
 
         return authRepository.deleteAccount()
     }
