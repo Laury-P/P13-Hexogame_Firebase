@@ -38,6 +38,6 @@
   <string name="error_comment">Comment not valid</string>
   <string name="error_user">User not valid. Please sign in and retry</string>
   <string name="error_data">An error occurred. Please check your connection and try again</string>
-  <string name="error_unknown">An error occured</string>
+  <string name="error_unknown">An error occurred</string>
 
 </resources>
