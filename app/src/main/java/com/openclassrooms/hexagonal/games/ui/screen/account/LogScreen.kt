@@ -73,7 +73,9 @@ fun LogScreen(onHomeFeedNav: () -> Unit) {
         )
     }) { innerPadding ->
         FirebaseAuthScreen(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             configuration = configuration,
             onSignInSuccess = { _ ->
                 onHomeFeedNav()
@@ -87,7 +89,7 @@ fun LogScreen(onHomeFeedNav: () -> Unit) {
                 onHomeFeedNav()
             },
             authenticatedContent = { state, _ ->
-                val user = when(state) {
+                val user = when (state) {
                     is AuthState.Success -> state.user
                     is AuthState.RequiresEmailVerification -> state.user
                     else -> null
@@ -104,7 +106,6 @@ fun LogScreen(onHomeFeedNav: () -> Unit) {
                         CircularProgressIndicator()
                     }
                 }
-
 
 
             }
@@ -126,10 +127,11 @@ fun ProfileGuard(
         viewModel.checkUser(uid)
     }
 
-    when(userExists) {
+    when (userExists) {
         null -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
+
         false -> {
             ProfileCompletionScreen(
                 onSave = { firstname, lastname ->
@@ -137,6 +139,7 @@ fun ProfileGuard(
                 }
             )
         }
+
         true -> {
             onUserReady()
         }
@@ -174,7 +177,6 @@ fun ProfileCompletionScreen(onSave: (String, String) -> Unit) {
             Text("Enregistrer")
         }
     }
-
 
 
 }

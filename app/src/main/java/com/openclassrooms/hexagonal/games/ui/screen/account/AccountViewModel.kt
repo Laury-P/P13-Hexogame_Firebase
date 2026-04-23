@@ -44,9 +44,11 @@ class AccountViewModel @Inject constructor(
                         is DomainAuthException.NeedsReauth -> {
                             _events.send(AccountEvent.NeedReauthentification)
                         }
+
                         is DomainAuthException.NetworkError -> {
                             _events.send(AccountEvent.NetworkError)
                         }
+
                         else -> {
                             _events.send(AccountEvent.UnknownError)
                         }

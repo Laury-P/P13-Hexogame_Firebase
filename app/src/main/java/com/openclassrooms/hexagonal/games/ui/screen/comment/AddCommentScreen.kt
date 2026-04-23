@@ -84,9 +84,10 @@ fun AddCommentScreen(
         val error by viewModel.error.collectAsState()
 
         if (isPublishing is IsPublishing.Publishing) {
-            Box(modifier = Modifier.fillMaxSize(),
+            Box(
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 CircularProgressIndicator()
             }
         }
@@ -110,7 +111,7 @@ fun AddCommentScreen(
                 modifier = Modifier.padding(16.dp),
                 onClick = { viewModel.addComment(postId) },
                 enabled = !error && isPublishing !is IsPublishing.Publishing
-            ){
+            ) {
                 if (isPublishing is IsPublishing.DataError) {
                     Text(text = stringResource(id = R.string.retry_button))
                 } else Text(text = stringResource(id = R.string.action_save))

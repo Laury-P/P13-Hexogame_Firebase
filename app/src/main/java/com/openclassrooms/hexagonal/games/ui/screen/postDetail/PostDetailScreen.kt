@@ -100,13 +100,14 @@ fun PostDetailScreen(
         floatingActionButtonPosition = FabPosition.End
 
     ) { contentPadding ->
-        when(val state = postState) {
+        when (val state = postState) {
             is UiState.Error -> {
                 Text(text = state.message)
                 Button(onClick = { viewModel.loadPost(postId) }) {
                     Text(text = stringResource(R.string.retry_button))
                 }
             }
+
             is UiState.Loading -> CircularProgressIndicator()
             is UiState.Success -> {
                 PostDetailContent(
@@ -116,8 +117,9 @@ fun PostDetailScreen(
                     retryButton = { viewModel.loadPost(postId) }
                 )
             }
+
             else -> {}
-            }
+        }
 
 
     }
@@ -178,18 +180,19 @@ private fun PostDetailContent(
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
-        when(val comments = commentsState) {
+        when (commentsState) {
             is UiState.Error -> {
                 item {
-                    Text(text = comments.message)
+                    Text(text = commentsState.message)
                     Button(onClick = { retryButton() }) {
                         Text(text = stringResource(R.string.retry_button))
                     }
                 }
             }
-            is UiState.Loading -> item {CircularProgressIndicator()}
+
+            is UiState.Loading -> item { CircularProgressIndicator() }
             is UiState.Success -> {
-                if (comments.data.isEmpty()) {
+                if (commentsState.data.isEmpty()) {
                     item {
                         HorizontalDivider(
                             modifier = Modifier.padding(top = 8.dp)
@@ -202,6 +205,7 @@ private fun PostDetailContent(
                     }
                 }
             }
+
             else -> {}
 
         }
