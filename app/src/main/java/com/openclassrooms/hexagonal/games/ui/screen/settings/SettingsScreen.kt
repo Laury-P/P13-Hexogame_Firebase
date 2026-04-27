@@ -2,6 +2,7 @@ package com.openclassrooms.hexagonal.games.ui.screen.settings
 
 import android.Manifest
 import android.os.Build
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,8 +19,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -35,95 +38,128 @@ import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-  modifier: Modifier = Modifier,
-  viewModel: SettingsViewModel = hiltViewModel(),
-  onBackClick: () -> Unit
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = hiltViewModel(),
+    onBackClick: () -> Unit
 ) {
-  Scaffold(
-    modifier = modifier,
-    topBar = {
-      TopAppBar(
-        title = {
-          Text(stringResource(id = R.string.action_settings))
-        },
-        navigationIcon = {
-          IconButton(onClick = {
-            onBackClick()
-          }) {
-            Icon(
-              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-              contentDescription = stringResource(id = R.string.contentDescription_go_back)
-            )
-          }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.settingsEvents.collect { settingsEvents ->
+            when (settingsEvents) {
+                is SettingsEvents.Error -> {
+                    Toast.makeText(
+                        context,
+                        R.string.error_unknown,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                SettingsEvents.EnabledNotifications -> {
+                    Toast.makeText(
+                        context,
+                        "Notifications enabled",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                SettingsEvents.DisabledNotifications -> {
+                    Toast.makeText(
+                        context,
+                        "Notifications disabled",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
-      )
     }
-  ) { contentPadding ->
-    Settings(
-      modifier = Modifier.padding(contentPadding),
-      onNotificationDisabledClicked = { viewModel.disableNotifications() },
-      onNotificationEnabledClicked = {
-        viewModel.enableNotifications()
-      }
-    )
-  }
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(stringResource(id = R.string.action_settings))
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        onBackClick()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.contentDescription_go_back)
+                        )
+                    }
+                }
+            )
+        }
+    ) { contentPadding ->
+
+        Settings(
+            modifier = Modifier.padding(contentPadding),
+            onNotificationDisabledClicked = { viewModel.disableNotifications() },
+            onNotificationEnabledClicked = {
+                viewModel.enableNotifications()
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun Settings(
-  modifier: Modifier = Modifier,
-  onNotificationEnabledClicked: () -> Unit,
-  onNotificationDisabledClicked: () -> Unit
+    modifier: Modifier = Modifier,
+    onNotificationEnabledClicked: () -> Unit,
+    onNotificationDisabledClicked: () -> Unit
 ) {
-  val notificationsPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-    rememberPermissionState(
-      Manifest.permission.POST_NOTIFICATIONS
-    )
-  } else {
-    null
-  }
-  
-  Column(
-    modifier = Modifier.fillMaxSize(),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.SpaceEvenly
-  ) {
-    Icon(
-      modifier = Modifier.size(200.dp),
-      painter = painterResource(id = R.drawable.ic_notifications),
-      tint = MaterialTheme.colorScheme.onSurface,
-      contentDescription = stringResource(id = R.string.contentDescription_notification_icon)
-    )
-    Button(
-      onClick = {
+    val notificationsPermissionState =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          if (notificationsPermissionState?.status?.isGranted == false) {
-            notificationsPermissionState.launchPermissionRequest()
-          }
+            rememberPermissionState(
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        } else {
+            null
         }
-        
-        onNotificationEnabledClicked()
-      }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
-      Text(text = stringResource(id = R.string.notification_enable))
+        Icon(
+            modifier = Modifier.size(200.dp),
+            painter = painterResource(id = R.drawable.ic_notifications),
+            tint = MaterialTheme.colorScheme.onSurface,
+            contentDescription = stringResource(id = R.string.contentDescription_notification_icon)
+        )
+        Button(
+            onClick = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (notificationsPermissionState?.status?.isGranted == false) {
+                        notificationsPermissionState.launchPermissionRequest()
+                    }
+                }
+
+                onNotificationEnabledClicked()
+            }
+        ) {
+            Text(text = stringResource(id = R.string.notification_enable))
+        }
+        Button(
+            onClick = { onNotificationDisabledClicked() }
+        ) {
+            Text(text = stringResource(id = R.string.notification_disable))
+        }
     }
-    Button(
-      onClick = { onNotificationDisabledClicked() }
-    ) {
-      Text(text = stringResource(id = R.string.notification_disable))
-    }
-  }
 }
 
 @PreviewLightDark
 @PreviewScreenSizes
 @Composable
 private fun SettingsPreview() {
-  HexagonalGamesTheme {
-    Settings(
-      onNotificationEnabledClicked = { },
-      onNotificationDisabledClicked = { }
-    )
-  }
+    HexagonalGamesTheme {
+        Settings(
+            onNotificationEnabledClicked = { },
+            onNotificationDisabledClicked = { }
+        )
+    }
 }
