@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games
+package com.openclassrooms.hexagonal.games.viewModelUnitTest
 
 import app.cash.turbine.test
 import com.openclassrooms.hexagonal.games.domain.model.User

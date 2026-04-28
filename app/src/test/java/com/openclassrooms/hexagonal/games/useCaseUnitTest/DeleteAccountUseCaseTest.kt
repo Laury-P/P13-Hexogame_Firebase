@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games
+package com.openclassrooms.hexagonal.games.useCaseUnitTest
 
 import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
@@ -8,8 +8,7 @@ import com.openclassrooms.hexagonal.games.domain.usecases.DeleteAccountUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -39,8 +38,8 @@ class DeleteAccountUseCaseTest {
         val result = deleteAccountUseCase()
 
         // THEN
-        assertTrue(result.isFailure)
-        assertTrue(result.exceptionOrNull() is DomainAuthException.NeedsReauth)
+        TestCase.assertTrue(result.isFailure)
+        TestCase.assertTrue(result.exceptionOrNull() is DomainAuthException.NeedsReauth)
 
         // On vérifie qu'on n'a pas essayé de supprimer les posts (sécurité)
         coVerify(exactly = 0) { postRepository.deleteAllPostsFromUser(any()) }
@@ -59,8 +58,8 @@ class DeleteAccountUseCaseTest {
         val result = deleteAccountUseCase()
 
         // THEN
-        assertTrue(result.isFailure)
-        assertEquals("Failed to delete posts", result.exceptionOrNull()?.message)
+        TestCase.assertTrue(result.isFailure)
+        TestCase.assertEquals("Failed to delete posts", result.exceptionOrNull()?.message)
 
         // On vérifie que la suite n'a PAS été appelée
         coVerify(exactly = 0) { userRepository.deleteUser(any()) }
@@ -81,7 +80,7 @@ class DeleteAccountUseCaseTest {
         val result = deleteAccountUseCase()
 
         // THEN
-        assertTrue(result.isSuccess)
+        TestCase.assertTrue(result.isSuccess)
 
         // On vérifie que TOUTE la chaîne a été parcourue
         coVerify { postRepository.deleteAllPostsFromUser(uid) }

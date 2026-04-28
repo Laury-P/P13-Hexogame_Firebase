@@ -1,4 +1,4 @@
-package com.openclassrooms.hexagonal.games
+package com.openclassrooms.hexagonal.games.viewModelUnitTest
 
 import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.usecases.DeleteAccountUseCase

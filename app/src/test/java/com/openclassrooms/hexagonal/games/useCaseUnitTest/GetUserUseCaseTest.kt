@@ -1,6 +1,6 @@
-package com.openclassrooms.hexagonal.games
+package com.openclassrooms.hexagonal.games.useCaseUnitTest
 
-import com.google.firebase.firestore.util.Assert.fail
+import com.google.firebase.firestore.util.Assert
 import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.model.User
 import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
@@ -9,8 +9,7 @@ import com.openclassrooms.hexagonal.games.domain.usecases.GetUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
+import junit.framework.TestCase
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -34,7 +33,7 @@ class GetUserUseCaseTest {
         // WHEN & THEN: On vérifie que l'appel jette bien l'exception
         try {
             getUserUseCase()
-            fail("Should have thrown DomainAuthException.NeedsReauth")
+            Assert.fail("Should have thrown DomainAuthException.NeedsReauth")
         } catch (e: DomainAuthException.NeedsReauth) {
             // Test réussi
         }
@@ -53,7 +52,7 @@ class GetUserUseCaseTest {
         val result = getUserUseCase()
 
         // THEN
-        assertEquals(mockUser, result)
+        TestCase.assertEquals(mockUser, result)
         // On vérifie que le repository utilisateur a bien été appelé avec le bon ID
         coVerify { userRepository.getCurrentUser(mockId) }
     }
@@ -69,6 +68,6 @@ class GetUserUseCaseTest {
         val result = getUserUseCase()
 
         // THEN
-        assertNull(result)
+        TestCase.assertNull(result)
     }
 }
