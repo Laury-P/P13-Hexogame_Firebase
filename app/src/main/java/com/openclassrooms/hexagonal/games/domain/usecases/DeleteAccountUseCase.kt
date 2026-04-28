@@ -18,19 +18,16 @@ class DeleteAccountUseCase @Inject constructor(
         }
         postRepository.deleteAllPostsFromUser(userId)
             .onFailure {
-                //TODO send error to crashlytics
                 return Result.failure(Exception("Failed to delete posts"))
             }
 
         postRepository.deleteAllCommentsFromUser(userId)
             .onFailure {
-                //TODO send error to crashlytics
                 return Result.failure(Exception("Failed to delete comments"))
             }
 
         userRepository.deleteUser(userId)
             .onFailure {
-                //TODO send error to crashlytics
                 return Result.failure(Exception("Failed to delete user"))
             }
 
