@@ -1,8 +1,10 @@
 package com.openclassrooms.hexagonal.games.data.repository
 
 import androidx.core.net.toUri
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.snapshots
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.hexagonal.games.domain.model.Comment
@@ -59,11 +61,11 @@ class FirebasePostRepository @Inject constructor(
         firestore.collection("posts")
             .document(postId)
             .snapshots()
-            .map { document ->
+            .map<DocumentSnapshot, UiState<Post?>> { document ->
                 UiState.Success(document.toObject(Post::class.java))
             }
             .catch { exception ->
-                UiState.Error(exception.message ?: "Unknown error")
+                emit(UiState.Error(exception.message ?: "Unknown error"))
             }
 
     override fun getCommentsByPostId(postId: String): Flow<UiState<List<Comment>>> =
@@ -72,13 +74,13 @@ class FirebasePostRepository @Inject constructor(
             .collection("comments")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .snapshots()
-            .map { queryDocumentSnapshots ->
+            .map<QuerySnapshot, UiState<List<Comment>>> { queryDocumentSnapshots ->
                 val comments = queryDocumentSnapshots.documents.mapNotNull { document ->
                     document.toObject(Comment::class.java)
                 }
                 UiState.Success(comments)
             }.catch { exception ->
-                UiState.Error(exception.message ?: "Unknown error")
+                emit(UiState.Error(exception.message ?: "Unknown error"))
             }
 
     override suspend fun deleteAllPostsFromUser(userId: String): Result<Unit> = runCatching {
