@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
-class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext private val context: Context) : AuthRepository {
+class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext private val context: Context, private val authUi: FirebaseAuthUI) : AuthRepository {
 
     override fun userLogState(): Flow<LocalAuthState> {
-        return FirebaseAuthUI.getInstance()
+        return authUi
             .authStateFlow()
             .map { firebaseAuthState ->
                 when (firebaseAuthState) {
@@ -34,16 +34,16 @@ class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext pri
     }
 
     override suspend fun signOut(): Result<Unit> = runCatching {
-        FirebaseAuthUI.getInstance().signOut(context)
+        authUi.signOut(context)
     }
 
     override fun getUserId(): String?{
-        return FirebaseAuthUI.getInstance().auth.currentUser?.uid
+        return authUi.auth.currentUser?.uid
     }
 
     override suspend fun deleteAccount(): Result<Unit> = runCatching {
         try {
-            FirebaseAuthUI.getInstance().delete(context)
+            authUi.delete(context)
         } catch (e: Exception) {
             throw when(e) {
                 is AuthException.InvalidCredentialsException -> DomainAuthException.NeedsReauth()
@@ -53,7 +53,7 @@ class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext pri
     }}
 
     override suspend fun checkIfReauthIsNeeded(): Boolean {
-        val user = FirebaseAuthUI.getInstance().getCurrentUser() ?: return true
+        val user = authUi.getCurrentUser() ?: return true
         val lastLogin = user.metadata?.lastSignInTimestamp ?: 0L
         val now = System.currentTimeMillis()
 
