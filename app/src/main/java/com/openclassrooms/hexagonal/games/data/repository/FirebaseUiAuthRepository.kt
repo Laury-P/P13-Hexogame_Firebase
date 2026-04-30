@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
-class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext private val context: Context, private val authUi: FirebaseAuthUI) : AuthRepository {
+class FirebaseUiAuthRepository @Inject constructor(
+    @param:ApplicationContext private val context: Context,
+    private val authUi: FirebaseAuthUI
+) : AuthRepository {
 
     override fun userLogState(): Flow<LocalAuthState> {
         return authUi
@@ -23,9 +26,11 @@ class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext pri
                     is AuthState.Success -> {
                         LocalAuthState.LoggedIn(firebaseAuthState.user.uid)
                     }
+
                     is AuthState.RequiresEmailVerification -> {
                         LocalAuthState.LoggedIn(firebaseAuthState.user.uid)
                     }
+
                     is AuthState.Loading -> LocalAuthState.Loading
                     else -> LocalAuthState.LoggedOut
                 }
@@ -36,20 +41,19 @@ class FirebaseUiAuthRepository @Inject constructor(@param:ApplicationContext pri
         authUi.signOut(context)
     }
 
-    override fun getUserId(): String?{
+    override fun getUserId(): String? {
         return authUi.auth.currentUser?.uid
     }
 
     override suspend fun deleteAccount(): Result<Unit> = runCatching {
-        try {
-            authUi.delete(context)
-        } catch (e: Exception) {
-            throw when(e) {
-                is AuthException.InvalidCredentialsException -> DomainAuthException.NeedsReauth()
-                is AuthException.NetworkException -> DomainAuthException.NetworkError()
-                else -> DomainAuthException.UnknownError(e.message ?: "Unknown error")
-            }
-    }}
+        authUi.delete(context)
+    }.onFailure { error ->
+        when (error) {
+            is AuthException.InvalidCredentialsException -> DomainAuthException.NeedsReauth()
+            is AuthException.NetworkException -> DomainAuthException.NetworkError()
+            else -> DomainAuthException.UnknownError(error.message ?: "Unknown error")
+        }
+    }
 
     override suspend fun checkIfReauthIsNeeded(): Boolean {
         val user = authUi.getCurrentUser() ?: return true
