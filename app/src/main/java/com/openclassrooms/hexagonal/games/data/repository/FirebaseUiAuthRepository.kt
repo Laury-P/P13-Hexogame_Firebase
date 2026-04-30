@@ -4,7 +4,6 @@ import android.content.Context
 import com.firebase.ui.auth.AuthException
 import com.firebase.ui.auth.AuthState
 import com.firebase.ui.auth.FirebaseAuthUI
-import com.google.firebase.Firebase
 import com.openclassrooms.hexagonal.games.domain.exception.DomainAuthException
 import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
 import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
