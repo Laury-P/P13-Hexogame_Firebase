@@ -1,0 +1,14 @@
+package com.openclassrooms.hexagonal.games.domain.usecases
+
+
+import com.openclassrooms.hexagonal.games.domain.model.LocalAuthState
+import com.openclassrooms.hexagonal.games.domain.repository.AuthRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class GetUserLogStateUseCase @Inject constructor(private val authRepository: AuthRepository) {
+    operator fun invoke(): Flow<LocalAuthState> {
+        return authRepository.userLogState()
+    }
+
+}

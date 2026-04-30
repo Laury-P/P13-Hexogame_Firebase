@@ -1,20 +1,24 @@
 plugins {
   alias(libs.plugins.androidApplication)
-  alias(libs.plugins.kotlin)
+  alias(libs.plugins.compose.compiler)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
+  alias(libs.plugins.googleServices)
 }
 
 android {
   namespace = "com.openclassrooms.hexagonal.games"
-  compileSdk = 34
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.openclassrooms.hexagonal.games"
     minSdk = 24
-    targetSdk = 34
+    targetSdk = 36
     versionCode = 1
     versionName = "1.0"
+    androidResources {
+      localeFilters += listOf("eng", "fr")
+    }
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -29,14 +33,11 @@ android {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
   }
-  composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.11"
-  }
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
   buildFeatures {
     compose = true
+  }
+  testOptions{
+    unitTests.isReturnDefaultValues = true
   }
 }
 
@@ -59,6 +60,22 @@ dependencies {
   implementation(libs.lifecycle.runtime.compose)
   debugImplementation(libs.compose.ui.tooling)
   debugImplementation(libs.compose.ui.test.manifest)
+  implementation(libs.compose.icons.extended)
+
+  //firebase
+  implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.analytics)
+  implementation(libs.firebase.auth)
+  implementation(libs.firebase.messaging)
+  implementation(libs.firebase.storage)
+  implementation(libs.firebase.firestore)
+
+  implementation(libs.firebase.ui.auth)
+  implementation(libs.firebase.ui.storage)
+  implementation(libs.firebase.ui.firestore)
+
+
+  //activity
 
   implementation(libs.activity.compose)
   implementation(libs.navigation.compose)
@@ -71,4 +88,9 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
+  testImplementation(libs.mockk)
+  testImplementation(libs.turbine)
+  testImplementation(libs.kotlinx.coroutines.test)
+
+
 }

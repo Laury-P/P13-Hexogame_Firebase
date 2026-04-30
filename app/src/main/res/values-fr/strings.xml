@@ -3,7 +3,8 @@
   <string name="action_settings">Paramètres</string>
   <string name="homefeed_fragment_label">Home</string>
   <string name="add_fragment_label">Ajout d\'une publication</string>
-  <string name="by">Par %1$s %2$s</string>
+  <string name="no_posts">Aucune publication</string>
+  <string name="by">Par %1$s %2$s</string> <!-- %1$s est le prenom et %2$s est le nom -->
   <string name="notification_enable">Activer les notifications</string>
   <string name="notification_disable">Désactiver les notifications</string>
   <string name="description_button_add">Ajout</string>
@@ -14,4 +15,29 @@
   <string name="contentDescription_more">Plus</string>
   <string name="contentDescription_notification_icon">Notification icon</string>
   <string name="error_title">Titre non valide</string>
+  <string name="error_photo_or_description">Description ou photo non valide</string>
+  <string name="account">Mon compte</string>
+  <string name="signOutButton">Déconnexion</string>
+  <string name="error_failed_signout">Echec de la déconnexion. Veuillez réessayer.</string>
+  <string name="success_signout">Déconnexion réussie</string>
+  <string name="deleteAccountButton">Suppression du compte</string>
+  <string name="success_delete_account">Compte supprimé.</string>
+  <string name="retry_button">Réessayer</string>
+  <string name="cancel_button">Annuler</string>
+  <string name="deleteAccountTitle">Suppression du compte</string>
+  <string name="deleteAccountText">Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée.</string>
+
+  <string name="loggedin_to_post">Un compte est nécessaire pour ajouter une publication</string>
+  <string name="photo_button">Sélectionner une photo</string>
+  <string name="photo_description">Photo sélectionné</string>
+
+  <string name="comments">Commentaires</string>
+  <string name="no_comments">Soyer le premier à commenter.</string>
+  <string name="loggedin_to_comment">Un compte est nécessaire pour ajouter un commentaire</string>
+  <string name="add_comment_label">Ajout d\'un commentaire</string>
+  <string name="error_comment">Commentaire non valide</string>
+  <string name="error_user">Utilisateur non valide. Veuillez vous connecter</string>
+  <string name="error_data">Une erreur est survenue. Veuillez vérifier votre connexion et réessayer</string>
+  <string name="error_unknown">Une erreur est survenue</string>
+
 </resources>
