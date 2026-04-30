@@ -36,6 +36,9 @@ android {
   buildFeatures {
     compose = true
   }
+  testOptions{
+    unitTests.isReturnDefaultValues = true
+  }
 }
 
 dependencies {
@@ -85,4 +88,9 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
+  testImplementation(libs.mockk)
+  testImplementation(libs.turbine)
+  testImplementation(libs.kotlinx.coroutines.test)
+
+
 }

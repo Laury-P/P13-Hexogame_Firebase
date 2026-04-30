@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.di
 
 import android.content.Context
+import com.firebase.ui.auth.FirebaseAuthUI
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
@@ -30,10 +31,17 @@ class AppModule {
 
   @Provides
   @Singleton
+  fun provideAuthUi() : FirebaseAuthUI {
+    return FirebaseAuthUI.getInstance()
+  }
+
+  @Provides
+  @Singleton
   fun provideAuthRepository(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    authUi: FirebaseAuthUI
   ): AuthRepository {
-    return FirebaseUiAuthRepository(context)
+    return FirebaseUiAuthRepository(context, authUi)
   }
 
   @Provides
@@ -47,6 +55,7 @@ class AppModule {
   fun provideStorage() : FirebaseStorage {
     return FirebaseStorage.getInstance()
   }
+
 
 
   @Provides

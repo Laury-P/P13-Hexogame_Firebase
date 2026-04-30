@@ -40,7 +40,6 @@ import com.openclassrooms.hexagonal.games.domain.model.User
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogScreen(onHomeFeedNav: () -> Unit) {
-    //TODO Adapté les écrans au cahier des charges
     val context = LocalContext.current
     val configuration = authUIConfiguration {
         this.context = context
